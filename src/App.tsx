@@ -2,6 +2,7 @@ import './App.css';
 
 import { useRef } from 'react';
 
+import { CustomToneCard } from './components/CustomToneCard';
 import { GainControl } from './components/GainControl';
 import { NoiseControls } from './components/NoiseControls';
 import { ProcessorCard } from './components/ProcessorCard';
@@ -39,6 +40,9 @@ function App() {
 			<h1>Audio Processing Demo</h1>
 
 			<div className='processors-grid'>
+				{/* Custom Tone.js Node */}
+				<CustomToneCard />
+
 				{/* Tone.js Noise Generator */}
 				<ToneNoiseCard />
 
