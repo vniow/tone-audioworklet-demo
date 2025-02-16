@@ -2,7 +2,7 @@ import * as Tone from 'tone';
 
 interface CustomToneOptions extends Tone.ToneAudioNodeOptions {
 	noiseType?: 'white' | 'pink' | 'brown';
-	volume?: number;
+	gain?: number;
 }
 
 export class CustomToneWrapper extends Tone.ToneAudioNode<CustomToneOptions> {
@@ -11,27 +11,27 @@ export class CustomToneWrapper extends Tone.ToneAudioNode<CustomToneOptions> {
 	readonly output: Tone.OutputNode;
 
 	private _noise: Tone.Noise;
-	private _volume: Tone.Volume;
+	private _gain: Tone.Gain;
 	private _isPlaying = false;
 
 	constructor(options: Partial<CustomToneOptions> = {}) {
 		super(options);
 
-		this._volume = new Tone.Volume({
-			volume: options.volume ?? 0,
+		this._gain = new Tone.Gain({
+			gain: options.gain ?? 1,
 		});
 
 		this._noise = new Tone.Noise({
 			type: options.noiseType ?? 'white',
-			volume: -10,
+			volume: 0, // Set to 0 since we're using gain for volume control
 		});
 
 		// Set up audio routing
 		this.input = this._noise;
-		this.output = this._volume;
+		this.output = this._gain;
 
 		// Connect internal nodes
-		this._noise.connect(this._volume);
+		this._noise.connect(this._gain);
 	}
 
 	get isPlaying(): boolean {
@@ -46,12 +46,12 @@ export class CustomToneWrapper extends Tone.ToneAudioNode<CustomToneOptions> {
 		this._noise.type = type;
 	}
 
-	get volume(): number {
-		return this._volume.volume.value;
+	get gain(): number {
+		return this._gain.gain.value;
 	}
 
-	set volume(value: number) {
-		this._volume.volume.value = value;
+	set gain(value: number) {
+		this._gain.gain.value = value;
 	}
 
 	async start(): Promise<this> {
@@ -77,7 +77,7 @@ export class CustomToneWrapper extends Tone.ToneAudioNode<CustomToneOptions> {
 	dispose(): this {
 		super.dispose();
 		this._noise.dispose();
-		this._volume.dispose();
+		this._gain.dispose();
 		return this;
 	}
 }

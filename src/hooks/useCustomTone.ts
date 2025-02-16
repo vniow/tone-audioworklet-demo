@@ -8,7 +8,7 @@ export function useCustomTone() {
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [noiseType, setNoiseType] = useState<NoiseType>('white');
-	const [volume, setVolume] = useState(-10);
+	const [gainValue, setGainValue] = useState(1);
 	const [error, setError] = useState<Error | null>(null);
 
 	const toneNode = useRef<CustomToneWrapper | null>(null);
@@ -17,7 +17,7 @@ export function useCustomTone() {
 		try {
 			const node = new CustomToneWrapper({
 				noiseType,
-				volume,
+				gain: gainValue,
 			});
 
 			// Connect to destination (master output)
@@ -61,18 +61,18 @@ export function useCustomTone() {
 		}
 	};
 
-	const updateVolume = (value: number) => {
+	const updateGain = (value: number) => {
 		try {
 			const node = toneNode.current;
 			if (!node) {
 				throw new Error('Custom tone node not initialized');
 			}
 
-			node.volume = value;
-			setVolume(value);
+			node.gain = value;
+			setGainValue(value);
 			setError(null);
 		} catch (err) {
-			setError(err instanceof Error ? err : new Error('Failed to update volume'));
+			setError(err instanceof Error ? err : new Error('Failed to update gain'));
 		}
 	};
 
@@ -95,11 +95,11 @@ export function useCustomTone() {
 		isInitialized,
 		isPlaying,
 		noiseType,
-		volume,
+		gainValue,
 		error,
 		initialize,
 		togglePlayback,
 		updateNoiseType,
-		updateVolume,
+		updateGain,
 	};
 }

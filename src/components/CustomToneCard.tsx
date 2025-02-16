@@ -26,23 +26,25 @@ function NoiseSelect({ value, onChange, disabled }: NoiseSelectProps) {
 	);
 }
 
-interface VolumeControlProps {
-	volume: number;
-	onVolumeChange: (value: number) => void;
+interface GainControlProps {
+	gain: number;
+	onGainChange: (value: number) => void;
+	disabled?: boolean;
 }
 
-function VolumeControl({ volume, onVolumeChange }: VolumeControlProps) {
+function GainControl({ gain, onGainChange, disabled }: GainControlProps) {
 	return (
 		<div className='control-group'>
-			<label className='control-label'>Volume: {volume}dB</label>
+			<label className='control-label'>Gain: {gain.toFixed(2)}</label>
 			<input
 				type='range'
-				min='-40'
-				max='0'
-				step='0.1'
-				value={volume}
-				onChange={(e) => onVolumeChange(Number(e.target.value))}
+				min='0'
+				max='2'
+				step='0.01'
+				value={gain}
+				onChange={(e) => onGainChange(Number(e.target.value))}
 				className='slider'
+				disabled={disabled}
 			/>
 		</div>
 	);
@@ -53,12 +55,12 @@ export function CustomToneCard() {
 		isInitialized,
 		isPlaying,
 		noiseType,
-		volume,
+		gainValue,
 		error,
 		initialize,
 		togglePlayback,
 		updateNoiseType,
-		updateVolume,
+		updateGain,
 	} = useCustomTone();
 
 	return (
@@ -102,9 +104,10 @@ export function CustomToneCard() {
 							onChange={updateNoiseType}
 							disabled={!isInitialized}
 						/>
-						<VolumeControl
-							volume={volume}
-							onVolumeChange={updateVolume}
+						<GainControl
+							gain={gainValue}
+							onGainChange={updateGain}
+							disabled={!isInitialized}
 						/>
 					</div>
 				)}
