@@ -2,7 +2,6 @@ import { useToneWorklet } from '../hooks/useToneWorklet';
 
 interface NoiseControlsProps {
 	frequency: number;
-
 	onFrequencyChange: (value: number) => void;
 }
 
@@ -56,7 +55,6 @@ export function ToneWorkletCard() {
 		initialize,
 		togglePlayback,
 		updateFrequency,
-
 		updateGain,
 	} = useToneWorklet();
 
