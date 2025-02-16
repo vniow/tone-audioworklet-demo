@@ -7,6 +7,7 @@ import { GainControl } from './components/GainControl';
 import { NoiseControls } from './components/NoiseControls';
 import { ProcessorCard } from './components/ProcessorCard';
 import { ToneNoiseCard } from './components/ToneNoiseCard';
+import { ToneWorkletCard } from './components/ToneWorkletCard';
 import { useWorkletProcessor } from './hooks/useWorkletProcessor';
 import atanProcessorUrl from './worklets/audio-processor.ts?url';
 import noiseWorkletUrl from './worklets/noise-worklet.ts?url';
@@ -40,6 +41,7 @@ function App() {
 			<h1>Audio Processing Demo</h1>
 
 			<div className='processors-grid'>
+				<ToneWorkletCard />
 				{/* Custom Tone.js Node */}
 				<CustomToneCard />
 

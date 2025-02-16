@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import * as Tone from 'tone';
 
 import { CustomToneWrapper } from '../utils/CustomToneWrapper';
 
@@ -8,22 +9,26 @@ export function useCustomTone() {
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [noiseType, setNoiseType] = useState<NoiseType>('white');
-	const [gainValue, setGainValue] = useState(1);
+	const [gainValue, setGainValue] = useState(0.25);
 	const [error, setError] = useState<Error | null>(null);
 
 	const toneNode = useRef<CustomToneWrapper | null>(null);
+	const gainNode = useRef<Tone.Gain | null>(null);
 
 	const initialize = async () => {
 		try {
 			const node = new CustomToneWrapper({
 				noiseType,
-				gain: gainValue,
 			});
+			gainNode.current = new Tone.Gain(gainValue);
+			// Connect to gain node
+			node.connect(gainNode.current);
 
-			// Connect to destination (master output)
-			node.toDestination();
+			// Connect gain node to destination (master output)
+			gainNode.current.toDestination();
 
 			toneNode.current = node;
+
 			setIsInitialized(true);
 			setError(null);
 		} catch (err) {
@@ -63,12 +68,14 @@ export function useCustomTone() {
 
 	const updateGain = (value: number) => {
 		try {
-			const node = toneNode.current;
-			if (!node) {
-				throw new Error('Custom tone node not initialized');
+			// const node = toneNode.current;
+			// if (!node) {
+			// 	throw new Error('Custom tone node not initialized');
+			// }
+			const gain = gainNode.current;
+			if (gain) {
+				gain.gain.setValueAtTime(value, Tone.now());
 			}
-
-			node.gain = value;
 			setGainValue(value);
 			setError(null);
 		} catch (err) {

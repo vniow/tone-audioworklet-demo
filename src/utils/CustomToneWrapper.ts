@@ -2,7 +2,6 @@ import * as Tone from 'tone';
 
 interface CustomToneOptions extends Tone.ToneAudioNodeOptions {
 	noiseType?: 'white' | 'pink' | 'brown';
-	gain?: number;
 }
 
 export class CustomToneWrapper extends Tone.ToneAudioNode<CustomToneOptions> {
@@ -18,7 +17,7 @@ export class CustomToneWrapper extends Tone.ToneAudioNode<CustomToneOptions> {
 		super(options);
 
 		this._gain = new Tone.Gain({
-			gain: options.gain ?? 1,
+			// gain: options.gain ?? 1,
 		});
 
 		this._noise = new Tone.Noise({
