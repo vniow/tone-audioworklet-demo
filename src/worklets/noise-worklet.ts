@@ -1,19 +1,13 @@
 declare let currentTime: number;
 declare let sampleRate: number;
 
-console.group('🎵 Noise Worklet Setup');
-console.log('Initializing processor:', {
-	timestamp: new Date().toISOString(),
-	type: 'NoiseWorklet',
-});
-
 class NoiseWorklet extends AudioWorkletProcessor {
 	private isActive = false;
 	private frequency = 440; // Hz
 	private amplitude = 0.5;
 	private phase = 0;
 	private frameCount = 0;
-	private lastLog = 0;
+
 	private processingStats = {
 		totalFrames: 0,
 		totalSamples: 0,
@@ -24,49 +18,23 @@ class NoiseWorklet extends AudioWorkletProcessor {
 	};
 
 	constructor() {
-		console.group('🎵 NoiseWorklet Constructor');
 		super();
-		console.log('Initializing with defaults:', {
-			sampleRate,
-			frequency: this.frequency,
-			amplitude: this.amplitude,
-			timestamp: new Date().toISOString(),
-		});
-
 		this.port.onmessage = (e) => {
-			console.group('🎵 NoiseWorklet Message');
-			console.log('Message received:', e.data);
-
 			switch (e.data.type) {
 				case 'toggle': {
 					this.isActive = e.data.active;
-					console.log(`Noise Generator ${this.isActive ? 'activated' : 'deactivated'}`);
 					break;
 				}
 				case 'frequency': {
-					const oldFreq = this.frequency;
 					this.frequency = Math.max(20, Math.min(20000, e.data.value));
-					console.log('Frequency updated:', {
-						old: oldFreq,
-						new: this.frequency,
-						requested: e.data.value,
-					});
 					break;
 				}
 				case 'amplitude': {
-					const oldAmp = this.amplitude;
 					this.amplitude = Math.max(0, Math.min(1, e.data.value));
-					console.log('Amplitude updated:', {
-						old: oldAmp,
-						new: this.amplitude,
-						requested: e.data.value,
-					});
 					break;
 				}
 			}
-			console.groupEnd();
 		};
-		console.groupEnd();
 	}
 
 	process(_inputs: Float32Array[][], outputs: Float32Array[][]) {
@@ -75,9 +43,6 @@ class NoiseWorklet extends AudioWorkletProcessor {
 		const output = outputs[0];
 
 		if (!this.isActive) {
-			if (this.frameCount % 100 === 0) {
-				console.log('🎵 NoiseWorklet inactive, outputting silence');
-			}
 			output.forEach((channel) => channel.fill(0));
 			return true;
 		}
@@ -109,40 +74,8 @@ class NoiseWorklet extends AudioWorkletProcessor {
 		this.processingStats.maxValue = Math.max(this.processingStats.maxValue, currentMaxValue);
 		this.processingStats.minValue = Math.min(this.processingStats.minValue, currentMinValue);
 
-		if (this.frameCount % this.processingStats.logInterval === 0) {
-			const now = currentTime;
-			const timeSinceLastLog = now - this.lastLog;
-			const totalTime = now - this.processingStats.startTime;
-
-			console.group('🎵 NoiseWorklet Stats');
-			console.log('Processing metrics:', {
-				frame: this.frameCount,
-				timeSinceLastLog: timeSinceLastLog.toFixed(3) + 's',
-				totalTime: totalTime.toFixed(3) + 's',
-				averageFrameTime: (timeSinceLastLog / this.processingStats.logInterval).toFixed(5) + 's',
-				channels: output.length,
-				bufferSize: output[0].length,
-				samplesProcessed: this.processingStats.totalSamples,
-				sampleRate,
-			});
-
-			console.log('Audio metrics:', {
-				frequency: this.frequency,
-				amplitude: this.amplitude,
-				currentMaxValue: currentMaxValue.toFixed(4),
-				currentMinValue: currentMinValue.toFixed(4),
-				overallMaxValue: this.processingStats.maxValue.toFixed(4),
-				overallMinValue: this.processingStats.minValue.toFixed(4),
-			});
-			console.groupEnd();
-
-			this.lastLog = now;
-		}
-
 		return true;
 	}
 }
 
 registerProcessor('noise-worklet', NoiseWorklet);
-console.log('NoiseWorklet registration complete');
-console.groupEnd();

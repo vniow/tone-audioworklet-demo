@@ -2,8 +2,10 @@ import './App.css';
 
 import { useRef } from 'react';
 
+import { GainControl } from './components/GainControl';
 import { NoiseControls } from './components/NoiseControls';
 import { ProcessorCard } from './components/ProcessorCard';
+import { ToneNoiseCard } from './components/ToneNoiseCard';
 import { useWorkletProcessor } from './hooks/useWorkletProcessor';
 import atanProcessorUrl from './worklets/audio-processor.ts?url';
 import noiseWorkletUrl from './worklets/noise-worklet.ts?url';
@@ -34,9 +36,12 @@ function App() {
 
 	return (
 		<div className='container'>
-			<h1>Audio Worklet Demos</h1>
+			<h1>Audio Processing Demo</h1>
 
 			<div className='processors-grid'>
+				{/* Tone.js Noise Generator */}
+				<ToneNoiseCard />
+
 				{/* Audio File Processor */}
 				<ProcessorCard
 					title='Audio File Processor'
@@ -72,11 +77,20 @@ function App() {
 						disabled={!audioProcessor.isInitialized}
 						className='file-input'
 					/>
+
+					{audioProcessor.isInitialized && (
+						<div className='control-panel'>
+							<GainControl
+								gain={audioProcessor.controls.gain}
+								onGainChange={audioProcessor.updateGain}
+							/>
+						</div>
+					)}
 				</ProcessorCard>
 
-				{/* Noise Generator */}
+				{/* AudioWorklet Noise Generator */}
 				<ProcessorCard
-					title='Noise Generator'
+					title='AudioWorklet Noise Generator'
 					statusItems={[
 						{
 							label: 'Status',
@@ -110,12 +124,18 @@ function App() {
 					</button>
 
 					{noiseProcessor.isInitialized && (
-						<NoiseControls
-							frequency={noiseProcessor.controls.frequency ?? 440}
-							amplitude={noiseProcessor.controls.amplitude ?? 0.5}
-							onFrequencyChange={(value) => noiseProcessor.updateControl?.('frequency', value)}
-							onAmplitudeChange={(value) => noiseProcessor.updateControl?.('amplitude', value)}
-						/>
+						<div className='control-panel'>
+							<NoiseControls
+								frequency={noiseProcessor.controls.frequency ?? 440}
+								amplitude={noiseProcessor.controls.amplitude ?? 0.5}
+								onFrequencyChange={(value) => noiseProcessor.updateControl?.('frequency', value)}
+								onAmplitudeChange={(value) => noiseProcessor.updateControl?.('amplitude', value)}
+							/>
+							<GainControl
+								gain={noiseProcessor.controls.gain}
+								onGainChange={noiseProcessor.updateGain}
+							/>
+						</div>
 					)}
 				</ProcessorCard>
 			</div>

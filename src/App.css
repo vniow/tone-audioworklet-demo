@@ -198,6 +198,37 @@
 	background: #747bff;
 }
 
+.select-input {
+	width: 100%;
+	padding: 0.5rem;
+	background-color: #242424;
+	border: 1px solid #4b5563;
+	border-radius: 4px;
+	color: #e5e7eb;
+	cursor: pointer;
+	transition: border-color 0.2s;
+}
+
+.select-input:hover {
+	border-color: #646cff;
+}
+
+.select-input:focus {
+	outline: none;
+	border-color: #646cff;
+	box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+}
+
+.select-input:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.select-input option {
+	background-color: #1a1a1a;
+	color: #e5e7eb;
+}
+
 .read-the-docs {
 	color: #888;
 }
