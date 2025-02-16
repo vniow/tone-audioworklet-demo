@@ -6,7 +6,6 @@ import noiseWorkletUrl from '../worklets/noise-worklet.ts?url';
 
 interface NoiseControls {
 	frequency: number;
-	amplitude: number;
 }
 
 export function useToneWorklet() {
@@ -14,9 +13,8 @@ export function useToneWorklet() {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [controls, setControls] = useState<NoiseControls>({
 		frequency: 440,
-		amplitude: 0.5,
 	});
-	const [gainValue, setGainValue] = useState(0.5);
+	const [gainValue, setGainValue] = useState(0.25);
 	const [error, setError] = useState<Error | null>(null);
 
 	const toneNode = useRef<ToneWorkletWrapper | null>(null);

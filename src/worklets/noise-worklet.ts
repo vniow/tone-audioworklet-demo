@@ -4,7 +4,6 @@ declare let sampleRate: number;
 class NoiseWorklet extends AudioWorkletProcessor {
 	private isActive = false;
 	private frequency = 440; // Hz
-	private amplitude = 0.5;
 	private phase = 0;
 	private frameCount = 0;
 
@@ -27,10 +26,6 @@ class NoiseWorklet extends AudioWorkletProcessor {
 				}
 				case 'frequency': {
 					this.frequency = Math.max(20, Math.min(20000, e.data.value));
-					break;
-				}
-				case 'amplitude': {
-					this.amplitude = Math.max(0, Math.min(1, e.data.value));
 					break;
 				}
 			}
@@ -61,7 +56,7 @@ class NoiseWorklet extends AudioWorkletProcessor {
 					this.phase -= 2 * Math.PI;
 				}
 
-				const sample = this.amplitude * (0.7 * noise + 0.3 * Math.sin(this.phase));
+				const sample = 0.7 * noise + 0.3 * Math.sin(this.phase);
 				outputChannel[i] = sample;
 
 				currentMaxValue = Math.max(currentMaxValue, sample);
