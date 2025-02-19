@@ -1,7 +1,7 @@
 declare let currentTime: number;
 declare let sampleRate: number;
 
-class NoiseWorklet2 extends AudioWorkletProcessor {
+class BlarghWorklet extends AudioWorkletProcessor {
 	private isActive = false;
 	private frequency = 440; // Hz
 	private phase = 0;
@@ -73,4 +73,4 @@ class NoiseWorklet2 extends AudioWorkletProcessor {
 	}
 }
 
-registerProcessor('noise-worklet2', NoiseWorklet2);
+registerProcessor('blargh-worklet', BlarghWorklet);

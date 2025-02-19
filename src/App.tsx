@@ -1,5 +1,6 @@
 import './App.css';
 
+import { BlarghWorkletCard } from './components/BlarghWorkletCard';
 import { ToneWorkletCard } from './components/ToneWorkletCard';
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
 
 			<div className='processors-grid'>
 				<ToneWorkletCard />
-				<ToneWorkletCard />
+				<BlarghWorkletCard />
 			</div>
 		</div>
 	);

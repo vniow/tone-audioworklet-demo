@@ -1,5 +1,7 @@
 import * as Tone from 'tone';
 
+import { useAudioStore } from '../stores/audioStore';
+
 interface ToneWorkletOptions extends Tone.ToneAudioNodeOptions {
 	workletUrl: string;
 	processorName: string;
@@ -16,10 +18,10 @@ export class ToneWorkletWrapper extends Tone.ToneAudioNode<ToneWorkletOptions> {
 	private _worklet: AudioWorkletNode | null = null;
 
 	constructor(options: Partial<ToneWorkletOptions> = {}) {
-		super(options);
+		super({ context: useAudioStore.getState().context || undefined, ...options });
 
-		this.input = new Tone.Gain();
-		this.output = new Tone.Gain();
+		this.input = new Tone.Gain({ context: this.context });
+		this.output = new Tone.Gain({ context: this.context });
 
 		if (options.workletUrl && options.processorName) {
 			this._ready = this._initWorklet(options.workletUrl, options.processorName);
@@ -29,8 +31,8 @@ export class ToneWorkletWrapper extends Tone.ToneAudioNode<ToneWorkletOptions> {
 	private async _initWorklet(workletUrl: string, processorName: string): Promise<void> {
 		try {
 			await this.context.addAudioWorkletModule(workletUrl);
-			this._worklet = this.context.createAudioWorkletNode(processorName);
 
+			this._worklet = this.context.createAudioWorkletNode(processorName);
 			// Set up message handling
 			this._worklet.port.onmessage = (event) => {
 				if (event.data.type === 'stateChange') {

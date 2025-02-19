@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import * as Tone from 'tone';
 
+import { useAudioStore } from '../stores/audioStore';
 import { ToneWorkletWrapper } from '../utils/ToneWorkletWrapper';
 import noiseWorkletUrl from '../worklets/noise-worklet.ts?url';
 
@@ -19,9 +20,12 @@ export function useToneWorklet() {
 
 	const toneNode = useRef<ToneWorkletWrapper | null>(null);
 	const gainNode = useRef<Tone.Gain | null>(null);
+	const { initializeContext } = useAudioStore();
 
 	const initialize = async () => {
 		try {
+			await initializeContext();
+
 			const node = new ToneWorkletWrapper({
 				workletUrl: noiseWorkletUrl,
 				processorName: 'noise-worklet',

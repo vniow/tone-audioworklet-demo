@@ -1,4 +1,4 @@
-import { useToneWorklet2 } from '../hooks/useToneWorklet2';
+import { useBlarghWorklet } from '../hooks/useBlarghWorklet';
 
 interface NoiseControlsProps {
 	frequency: number;
@@ -45,7 +45,7 @@ function GainControl({ gain, onGainChange }: GainControlProps) {
 	);
 }
 
-export function ToneWorkletCard2() {
+export function BlarghWorkletCard() {
 	const {
 		isInitialized,
 		isPlaying,
@@ -56,11 +56,11 @@ export function ToneWorkletCard2() {
 		togglePlayback,
 		updateFrequency,
 		updateGain,
-	} = useToneWorklet2();
+	} = useBlarghWorklet();
 
 	return (
 		<div className='processor-card'>
-			<h2>Tone.js Worklet 2</h2>
+			<h2>Blargh Worklet</h2>
 			<div className='status-panel'>
 				<div className='status-item'>
 					<span>Status:</span>

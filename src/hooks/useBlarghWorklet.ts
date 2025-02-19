@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import * as Tone from 'tone';
 
-import { ToneWorkletWrapper } from '../utils/ToneWorkletWrapper';
-import noiseWorkletUrl2 from '../worklets/noise-worklet2.ts?url';
+import { useAudioStore } from '../stores/audioStore';
+import { BlarghWorkletWrapper } from '../utils/BlarghWorkletWrapper';
+import blarghWorklet from '../worklets/blargh-worklet.ts?url';
 
 interface NoiseControls {
 	frequency: number;
 }
 
-export function useToneWorklet2() {
+export function useBlarghWorklet() {
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [controls, setControls] = useState<NoiseControls>({
@@ -17,20 +18,23 @@ export function useToneWorklet2() {
 	const [gainValue, setGainValue] = useState(0.25);
 	const [error, setError] = useState<Error | null>(null);
 
-	const toneNode = useRef<ToneWorkletWrapper | null>(null);
+	const blarghNode = useRef<BlarghWorkletWrapper | null>(null);
 	const gainNode = useRef<Tone.Gain | null>(null);
+	const { initializeContext } = useAudioStore();
 
 	const initialize = async () => {
 		try {
-			const node = new ToneWorkletWrapper({
-				workletUrl: noiseWorkletUrl2,
-				processorName: 'noise-worklet2',
+			await initializeContext();
+
+			const node = new BlarghWorkletWrapper({
+				workletUrl: blarghWorklet,
+				processorName: 'blargh-worklet',
 			});
 			gainNode.current = new Tone.Gain(gainValue);
 
 			// Chain nodes
 			node.chain(gainNode.current.toDestination());
-			toneNode.current = node;
+			blarghNode.current = node;
 			setIsInitialized(true);
 			setError(null);
 		} catch (err) {
@@ -40,7 +44,7 @@ export function useToneWorklet2() {
 
 	const togglePlayback = async () => {
 		try {
-			const node = toneNode.current;
+			const node = blarghNode.current;
 			if (!node) {
 				throw new Error('Worklet not initialized');
 			}
@@ -55,7 +59,7 @@ export function useToneWorklet2() {
 
 	const updateFrequency = (value: number) => {
 		try {
-			const node = toneNode.current;
+			const node = blarghNode.current;
 			if (!node) {
 				throw new Error('Worklet not initialized');
 			}
@@ -70,7 +74,7 @@ export function useToneWorklet2() {
 
 	const updateAmplitude = (value: number) => {
 		try {
-			const node = toneNode.current;
+			const node = blarghNode.current;
 			if (!node) {
 				throw new Error('Worklet not initialized');
 			}
@@ -99,9 +103,9 @@ export function useToneWorklet2() {
 	};
 
 	const cleanup = () => {
-		if (toneNode.current) {
-			toneNode.current.dispose();
-			toneNode.current = null;
+		if (blarghNode.current) {
+			blarghNode.current.dispose();
+			blarghNode.current = null;
 		}
 		if (gainNode.current) {
 			gainNode.current.dispose();
