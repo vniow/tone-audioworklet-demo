@@ -45,7 +45,6 @@ class BlarghWorklet extends AudioWorkletProcessor {
 		const phaseIncrement = (2 * Math.PI * this.frequency) / sampleRate;
 		let currentMaxValue = -Infinity;
 		let currentMinValue = Infinity;
-		let samplesProcessed = 0;
 
 		for (let channel = 0; channel < output.length; ++channel) {
 			const outputChannel = output[channel];
@@ -61,13 +60,8 @@ class BlarghWorklet extends AudioWorkletProcessor {
 
 				currentMaxValue = Math.max(currentMaxValue, sample);
 				currentMinValue = Math.min(currentMinValue, sample);
-				samplesProcessed++;
 			}
 		}
-
-		this.processingStats.totalSamples += samplesProcessed;
-		this.processingStats.maxValue = Math.max(this.processingStats.maxValue, currentMaxValue);
-		this.processingStats.minValue = Math.min(this.processingStats.minValue, currentMinValue);
 
 		return true;
 	}

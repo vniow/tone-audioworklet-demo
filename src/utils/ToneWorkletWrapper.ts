@@ -1,6 +1,6 @@
-import * as Tone from 'tone';
+import * as Tone from 'tone'
 
-import { useAudioStore } from '../stores/audioStore';
+import { useAudioStore } from '../stores/audioStore'
 
 interface ToneWorkletOptions extends Tone.ToneAudioNodeOptions {
 	workletUrl: string;
@@ -18,7 +18,7 @@ export class ToneWorkletWrapper extends Tone.ToneAudioNode<ToneWorkletOptions> {
 	private _worklet: AudioWorkletNode | null = null;
 
 	constructor(options: Partial<ToneWorkletOptions> = {}) {
-		super({ context: useAudioStore.getState().context || undefined, ...options });
+		super({ context: Tone.getContext() || undefined, ...options });
 
 		this.input = new Tone.Gain({ context: this.context });
 		this.output = new Tone.Gain({ context: this.context });
