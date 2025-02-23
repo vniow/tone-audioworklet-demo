@@ -1,4 +1,4 @@
-import { useToneNode } from './useToneOscillatorNode'
+import { useToneNode } from '../hooks/useToneOscillatorNode'
 
 type Props = object;
 
