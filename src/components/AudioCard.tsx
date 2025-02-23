@@ -1,8 +1,6 @@
 import { useToneNode } from '../hooks/useToneOscillatorNode'
 
-type Props = object;
-
-export const AudioCard = (props: Props) => {
+export const AudioCard = () => {
 	const { isPlaying, startOscillator, stopOscillator } = useToneNode();
 
 	return (

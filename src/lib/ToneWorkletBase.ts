@@ -1,9 +1,8 @@
 import * as Tone from 'tone'
 
-// import { noOp } from '../util/Interface.js'
-import { getWorkletGlobalScope } from '../worklets/worklet/WorkletGlobalScope.js'
+import { getWorkletGlobalScope } from '../worklets/WorkletGlobalScope.js'
 
-export const noOp: (...args: any[]) => any = () => {
+const noOp: (...args: unknown[]) => unknown = () => {
 	// no operation here!
 };
 
@@ -45,7 +44,7 @@ export abstract class ToneWorkletBase<Options extends ToneWorkletBaseOptions> ex
 	/**
 	 * Callback which is invoked when there is an error in the processing
 	 */
-	onprocessorerror: (e: string) => void = noOp;
+	onprocessorerror: (e: ErrorEvent) => void = noOp;
 
 	constructor(options: Options) {
 		super(options);
