@@ -1,11 +1,11 @@
-import './BitCrusherNode2'
+import './BitCrusherNode'
 
 import * as Tone from 'tone'
 
-import { workletName } from '../worklets/BitCrusher2.worklet'
+import { workletName } from '../worklets/BitCrusher.worklet'
 import { getWorkletGlobalScope } from '../worklets/WorkletGlobalScope'
 
-export async function initializeAudio() {
+export async function initializeBitCrusher() {
 	// Create AudioContext via Tone.js
 	await Tone.start();
 

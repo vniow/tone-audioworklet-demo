@@ -1,7 +1,7 @@
-import { useToneOscillatorNode } from '../hooks/useToneOscillatorNode'
+import { useCustomOscAndBitCrusher } from '../hooks/useCustomOscAndBitCrusher'
 
 export const AudioCard = () => {
-	const { isPlaying, startOscillator, stopOscillator } = useToneOscillatorNode();
+	const { isPlaying, startOscillator, stopOscillator } = useCustomOscAndBitCrusher();
 
 	return (
 		<div className='p-4 border rounded-lg shadow-md'>
