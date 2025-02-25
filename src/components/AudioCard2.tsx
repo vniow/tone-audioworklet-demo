@@ -1,7 +1,7 @@
-import { useToneOscillatorNode } from '../hooks/useToneOscillatorNode'
+import { useToneOscillatorNode2 } from '../hooks/useToneOscillatorNode2'
 
-export const AudioCard = () => {
-	const { isPlaying, startOscillator, stopOscillator } = useToneOscillatorNode();
+export const AudioCard2 = () => {
+	const { isPlaying, startOscillator, stopOscillator } = useToneOscillatorNode2();
 
 	return (
 		<div className='p-4 border rounded-lg shadow-md'>

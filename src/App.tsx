@@ -1,6 +1,7 @@
 import './App.css'
 
 import { AudioCard } from './components/AudioCard'
+import { AudioCard2 } from './components/AudioCard2'
 
 function App() {
 	return (
@@ -8,6 +9,7 @@ function App() {
 			<h1 className='mb-8 text-center'>Audio Processing Demo</h1>
 			<div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
 				<AudioCard />
+				<AudioCard2 />
 			</div>
 		</div>
 	);

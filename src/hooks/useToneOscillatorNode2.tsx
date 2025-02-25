@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import * as Tone from 'tone'
 
-import { BitCrusherNode } from '../lib/BitCrusherNode'
+import { BitCrusherNode2 } from '../lib/BitCrusherNode2'
 import { CustomOscillatorNode } from '../lib/CustomOscillatorNode'
 
 interface AudioNodes {
@@ -11,10 +11,10 @@ interface AudioNodes {
 	customOscillator: CustomOscillatorNode | null;
 	bitCrusher: Tone.BitCrusher | null;
 
-	bitCrusherNode: BitCrusherNode | null;
+	bitCrusherNode: BitCrusherNode2 | null;
 }
 
-export const useToneOscillatorNode = () => {
+export const useToneOscillatorNode2 = () => {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [nodes, setNodes] = useState<AudioNodes>({
 		// osc1: null,
@@ -31,8 +31,8 @@ export const useToneOscillatorNode = () => {
 
 		const customOscillator = new CustomOscillatorNode({ frequency: 220 });
 		const bitCrusher = new Tone.BitCrusher(4);
-		const bitCrusherNode = new BitCrusherNode().toDestination();
-		bitCrusherNode.bits.value = 4;
+		const bitCrusherNode = new BitCrusherNode2().toDestination();
+		bitCrusherNode.bits.value = 16;
 
 		// Set initial volumes
 		// osc1.volume.value = -100;

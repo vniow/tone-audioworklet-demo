@@ -2,20 +2,20 @@ import * as Tone from 'tone'
 
 import { ToneWorkletBase, ToneWorkletBaseOptions } from './ToneWorkletBase'
 
-export interface BitCrusherTestOptions extends Tone.ToneAudioNodeOptions {
+export interface BitCrusherNode2Options extends Tone.ToneAudioNodeOptions {
 	bits: Tone.Unit.Positive;
 	wet?: number;
 }
 
-export class BitCrusherTest extends ToneWorkletBase<BitCrusherTestOptions> {
-	readonly name: string = 'BitCrusherTest';
+export class BitCrusherNode2 extends ToneWorkletBase<BitCrusherNode2Options> {
+	readonly name: string = 'BitCrusherNode2';
 	readonly input: Tone.Gain;
 	readonly output: Tone.Gain;
 	readonly bits: Tone.Param<'positive'>;
 	private _wetDry: Tone.CrossFade;
 
-	constructor(options: Partial<BitCrusherTestOptions> = {}) {
-		const opts = Tone.optionsFromArguments(BitCrusherTest.getDefaults(), [options]);
+	constructor(options: Partial<BitCrusherNode2Options> = {}) {
+		const opts = Tone.optionsFromArguments(BitCrusherNode2.getDefaults(), [options]);
 		super(opts);
 
 		this.input = new Tone.Gain({ context: this.context });
@@ -49,7 +49,7 @@ export class BitCrusherTest extends ToneWorkletBase<BitCrusherTestOptions> {
 		this._wetDry.connect(this.output);
 	}
 
-	static getDefaults(): BitCrusherTestOptions {
+	static getDefaults(): BitCrusherNode2Options {
 		return Object.assign(Tone.ToneAudioNode.getDefaults(), {
 			bits: 4,
 			wet: 1,
@@ -73,6 +73,6 @@ export class BitCrusherTest extends ToneWorkletBase<BitCrusherTestOptions> {
 	}
 }
 
-export interface BitCrusherTestWorkletOptions extends ToneWorkletBaseOptions {
+export interface BitCrusherNode2WorkletOptions extends ToneWorkletBaseOptions {
 	bits: number;
 }
