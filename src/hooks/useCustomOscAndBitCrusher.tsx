@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react'
-import * as Tone from 'tone'
+import { useEffect, useState } from 'react';
+import * as Tone from 'tone';
 
-import { BitCrusherNode } from '../lib/BitCrusherNode'
-import { CustomOscillatorNode } from '../lib/CustomOscillatorNode'
+import { BitCrusherNode } from '../lib/BitCrusherNode';
+import { CustomOscillatorNode } from '../lib/CustomOscillatorNode';
+import { initializeAudio } from '../lib/initializeAudio';
 
 interface AudioNodes {
 	customOscillator: CustomOscillatorNode | null;
-	bitCrusher: Tone.BitCrusher | null;
-
 	bitCrusherNode: BitCrusherNode | null;
 }
 
@@ -15,38 +14,58 @@ export const useCustomOscAndBitCrusher = () => {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [nodes, setNodes] = useState<AudioNodes>({
 		customOscillator: null,
-		bitCrusher: null,
 		bitCrusherNode: null,
 	});
+	const [isInitialized, setIsInitialized] = useState(false);
 
 	useEffect(() => {
-		const customOscillator = new CustomOscillatorNode({ frequency: 220 });
-		const bitCrusher = new Tone.BitCrusher(4);
-		const bitCrusherNode = new BitCrusherNode().toDestination();
-		bitCrusherNode.bits.value = 4;
-		customOscillator.output.gain.value = 1;
+		let mounted = true;
 
-		customOscillator.output.chain(bitCrusherNode);
+		const setup = async () => {
+			try {
+				// Ensure worklets are registered before creating nodes
+				await initializeAudio();
 
-		setNodes({ customOscillator, bitCrusherNode });
+				if (!mounted) return;
+
+				const customOscillator = new CustomOscillatorNode({ frequency: 220 });
+				const bitCrusherNode = new BitCrusherNode().toDestination();
+				bitCrusherNode.bits.value = 4;
+				customOscillator.output.gain.value = 1;
+
+				customOscillator.output.chain(bitCrusherNode);
+
+				setNodes({ customOscillator, bitCrusherNode });
+				setIsInitialized(true);
+			} catch (err) {
+				console.error('Failed to initialize audio:', err);
+			}
+		};
+
+		setup();
 
 		return () => {
-			if (isPlaying) {
-				customOscillator.stop();
-
-				bitCrusherNode.disconnect();
+			mounted = false;
+			if (isPlaying && nodes.customOscillator) {
+				nodes.customOscillator.stop();
+				if (nodes.bitCrusherNode) {
+					nodes.bitCrusherNode.disconnect();
+				}
 			}
 
-			customOscillator.dispose();
+			if (nodes.customOscillator) {
+				nodes.customOscillator.dispose();
+			}
 
-			bitCrusherNode.dispose();
+			if (nodes.bitCrusherNode) {
+				nodes.bitCrusherNode.dispose();
+			}
 		};
 	}, []);
 
 	const startOscillator = () => {
-		if (!isPlaying && nodes.customOscillator) {
+		if (!isPlaying && nodes.customOscillator && isInitialized) {
 			nodes.customOscillator.start();
-
 			setIsPlaying(true);
 		}
 	};
@@ -58,5 +77,5 @@ export const useCustomOscAndBitCrusher = () => {
 		}
 	};
 
-	return { isPlaying, startOscillator, stopOscillator };
+	return { isPlaying, startOscillator, stopOscillator, isInitialized };
 };
