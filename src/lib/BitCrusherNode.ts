@@ -6,6 +6,11 @@ export interface BitCrusherNodeOptions extends Tone.ToneAudioNodeOptions {
 	bits: Tone.Unit.Positive;
 	wet?: number;
 }
+export interface BitCrusherNodeWorkletOptions extends ToneWorkletBaseOptions {
+	bits: number;
+}
+
+
 
 export class BitCrusherNode extends ToneWorkletBase<BitCrusherNodeOptions> {
 	readonly name: string = 'BitCrusherNode';
@@ -73,6 +78,4 @@ export class BitCrusherNode extends ToneWorkletBase<BitCrusherNodeOptions> {
 	}
 }
 
-export interface BitCrusherNodeWorkletOptions extends ToneWorkletBaseOptions {
-	bits: number;
-}
+
