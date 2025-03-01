@@ -18,8 +18,10 @@ export class BitCrusherNode extends ToneWorkletBase<BitCrusherNodeOptions> {
 	readonly bits: Tone.Param<'positive'>;
 	private _wetDry: Tone.CrossFade;
 
-	constructor(options: Partial<BitCrusherNodeOptions> = {}) {
-		const opts = Tone.optionsFromArguments(BitCrusherNode.getDefaults(), [options]);
+	constructor(...args: Partial<BitCrusherNodeOptions>[]) {
+		// Type assertion here is necessary because Tone.js expects IArguments
+		// but we're providing a safer, more specific array type
+		const opts = Tone.optionsFromArguments(BitCrusherNode.getDefaults(), args as unknown as IArguments);
 		super(opts);
 
 		this.input = new Tone.Gain({ context: this.context });
@@ -76,5 +78,3 @@ export class BitCrusherNode extends ToneWorkletBase<BitCrusherNodeOptions> {
 		return this;
 	}
 }
-
-
