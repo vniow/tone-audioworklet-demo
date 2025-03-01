@@ -1,11 +1,11 @@
-import { useCustomOscAndBitCrusher } from '../hooks/useCustomOscAndBitCrusher';
+import { useCustomOscAndBitCrusher } from '../hooks/useCustomOscAndBitCrusher'
 
-export const AudioCard = () => {
+export const CustomOscAndBitCrusherCard = () => {
 	const { isPlaying, startOscillator, stopOscillator, isInitialized } = useCustomOscAndBitCrusher();
 
 	return (
 		<div className='p-4 border rounded-lg shadow-md'>
-			<h2 className='text-lg mb-4'>Custom Tone Oscillator</h2>
+			<h2 className='text-lg mb-4'>Custom Tone Oscillator + BitCrusher</h2>
 			<button
 				onClick={isPlaying ? stopOscillator : startOscillator}
 				disabled={!isInitialized}

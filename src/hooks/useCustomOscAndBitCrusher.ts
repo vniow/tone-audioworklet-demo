@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 // import * as Tone from 'tone';
 import { BitCrusherNode } from '../lib/BitCrusherNode'
 import { CustomOscillatorNode } from '../lib/CustomOscillatorNode'
-import { initializeAudio } from '../lib/initializeAudio'
+import { initializeAudio } from '../lib/initializeBitCrusher'
 
 interface AudioNodes {
 	customOscillator: CustomOscillatorNode | null;
