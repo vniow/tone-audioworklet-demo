@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import * as Tone from 'tone';
+import { useEffect, useState } from 'react'
 
-import { BitCrusherNode } from '../lib/BitCrusherNode';
-import { CustomOscillatorNode } from '../lib/CustomOscillatorNode';
-import { initializeAudio } from '../lib/initializeAudio';
+// import * as Tone from 'tone';
+import { BitCrusherNode } from '../lib/BitCrusherNode'
+import { CustomOscillatorNode } from '../lib/CustomOscillatorNode'
+import { initializeAudio } from '../lib/initializeAudio'
 
 interface AudioNodes {
 	customOscillator: CustomOscillatorNode | null;
