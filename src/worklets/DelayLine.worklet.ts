@@ -1,10 +1,12 @@
+import './ToneAudioWorkletProcessor.worklet.js'
+
 import { addToWorklet } from './WorkletGlobalScope.js'
 
 const delayLine = /* javascript */ `
 	/**
 	 * A multichannel buffer for use within an AudioWorkletProcessor as a delay line
 	 */
-	class DelayLine {
+	class DelayLine  {
 		
 		constructor(size, channels) {
 			this.buffer = [];

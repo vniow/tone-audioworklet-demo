@@ -1,4 +1,3 @@
-// DelayProcessor.worklet.ts
 import './DelayLine.worklet.js'
 import './SingleIOProcessor.worklet.js'
 

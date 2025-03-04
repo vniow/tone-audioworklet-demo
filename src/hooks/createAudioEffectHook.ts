@@ -4,7 +4,7 @@ import { CustomOscillatorNode } from '../lib/CustomOscillatorNode'
 
 // Generic type for effect nodes
 type AudioEffectNode = {
-	toDestination: () => any;
+	toDestination: () => unknown;
 	disconnect: () => void;
 	dispose: () => void;
 };
@@ -14,7 +14,7 @@ interface AudioEffectConfig<T extends AudioEffectNode> {
 	// Name for logging/debugging
 	name: string;
 	// Function to initialize audio worklets
-	initialize: () => Promise<any>;
+	initialize: () => Promise<unknown>;
 	// Function to create the effect node
 	createEffectNode: (oscillator: CustomOscillatorNode) => T;
 	// Optional function to configure nodes after creation

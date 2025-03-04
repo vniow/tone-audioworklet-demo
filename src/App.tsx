@@ -2,6 +2,7 @@ import './App.css'
 
 import { CustomOscAndBitCrusherCard } from './components/CustomOscAndBitCrusherCard'
 import { CustomOscAndDelayCard } from './components/CustomOscAndDelayCard'
+import { NoiseGeneratorCard } from './components/NoiseGeneratorCard'
 
 function App() {
 	return (
@@ -11,6 +12,7 @@ function App() {
 			<div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
 				<CustomOscAndBitCrusherCard />
 				<CustomOscAndDelayCard />
+				<NoiseGeneratorCard />
 			</div>
 		</div>
 	);
