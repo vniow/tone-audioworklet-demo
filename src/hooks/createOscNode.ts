@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
-
-import { CustomOscillatorNode } from '../lib/CustomOscillatorNode'
+import { useEffect, useState } from 'react';
+import * as Tone from 'tone';
 
 // Generic type for effect nodes
 type AudioEffectNode = {
@@ -16,9 +15,9 @@ interface AudioEffectConfig<T extends AudioEffectNode> {
 	// Function to initialize audio worklets
 	initialize: () => Promise<unknown>;
 	// Function to create the effect node
-	createEffectNode: (oscillator: CustomOscillatorNode) => T;
+	createEffectNode: (oscillator: Tone.Oscillator) => T;
 	// Optional function to configure nodes after creation
-	configureNodes?: (oscillator: CustomOscillatorNode, effect: T) => void;
+	configureNodes?: (oscillator: Tone.Oscillator, effect: T) => void;
 }
 
 // Return type for all audio effect hooks
@@ -35,7 +34,7 @@ export function createAudioEffectHook<T extends AudioEffectNode>(
 	return () => {
 		const [isPlaying, setIsPlaying] = useState(false);
 		const [nodes, setNodes] = useState<{
-			customOscillator: CustomOscillatorNode | null;
+			customOscillator: Tone.Oscillator | null;
 			effectNode: T | null;
 		}>({
 			customOscillator: null,
@@ -54,7 +53,7 @@ export function createAudioEffectHook<T extends AudioEffectNode>(
 					if (!mounted) return;
 
 					// Create oscillator
-					const customOscillator = new CustomOscillatorNode({ frequency: 220 });
+					const customOscillator = new Tone.Oscillator({ frequency: 220 });
 
 					// Create effect node
 					const effectNode = config.createEffectNode(customOscillator);
@@ -65,7 +64,8 @@ export function createAudioEffectHook<T extends AudioEffectNode>(
 					}
 
 					// Connect nodes
-					customOscillator.output.chain(effectNode);
+					// customOscillator.output.chain(effectNode);
+					customOscillator.chain(effectNode);
 
 					setNodes({ customOscillator, effectNode });
 					setIsInitialized(true);

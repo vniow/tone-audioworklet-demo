@@ -1,6 +1,6 @@
-import { DelayNode } from '../lib/DelayNode'
-import { initializeAudio } from '../lib/initializeDelay'
-import { createAudioEffectHook } from './createAudioEffectHook'
+import { DelayNode } from '../lib/DelayNode';
+import { initializeAudio } from '../lib/initializeDelay';
+import { createAudioEffectHook } from './createOscNode';
 
 export const useCustomOscAndDelay = createAudioEffectHook({
 	name: 'Delay',

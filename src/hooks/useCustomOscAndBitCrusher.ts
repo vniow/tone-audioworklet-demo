@@ -1,6 +1,6 @@
-import { BitCrusherNode } from '../lib/BitCrusherNode'
-import { initializeAudio } from '../lib/initializeBitCrusher'
-import { createAudioEffectHook } from './createAudioEffectHook'
+import { BitCrusherNode } from '../lib/BitCrusherNode';
+import { initializeAudio } from '../lib/initializeBitCrusher';
+import { createAudioEffectHook } from './createOscNode';
 
 export const useCustomOscAndBitCrusher = createAudioEffectHook({
 	name: 'BitCrusher',
@@ -8,6 +8,6 @@ export const useCustomOscAndBitCrusher = createAudioEffectHook({
 	createEffectNode: () => new BitCrusherNode().toDestination(),
 	configureNodes: (oscillator, bitCrusher) => {
 		bitCrusher.bits.value = 4;
-		oscillator.output.gain.value = 1;
+		// oscillator.output
 	},
 });
