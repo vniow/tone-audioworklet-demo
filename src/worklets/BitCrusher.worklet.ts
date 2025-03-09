@@ -1,6 +1,6 @@
 import './SingleIOProcessor.worklet.js'
 
-import { registerProcessor } from './WorkletGlobalScope.js'
+import { registerProcessor } from '../lib/WorkletGlobalScope.js'
 
 export const workletName = 'bit-crusher';
 

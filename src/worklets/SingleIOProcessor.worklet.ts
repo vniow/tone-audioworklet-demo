@@ -1,9 +1,10 @@
-import "./ToneAudioWorkletProcessor.worklet.js";
-import { addToWorklet } from "./WorkletGlobalScope.js";
+import './ToneAudioWorkletProcessor.worklet'
+
+import { addToWorklet } from '../lib/WorkletGlobalScope'
 
 export const singleIOProcess = /* javascript */ `
 	/**
-	 * Abstract class for a single input/output processor. 
+	 * Abstract class for a single input/output processor ripped directly from Tone.js
 	 * has a 'generate' function which processes one sample at a time
 	 */
 	class SingleIOProcessor extends ToneAudioWorkletProcessor {

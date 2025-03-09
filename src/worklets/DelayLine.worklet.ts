@@ -1,6 +1,6 @@
 import './ToneAudioWorkletProcessor.worklet.js'
 
-import { addToWorklet } from './WorkletGlobalScope.js'
+import { addToWorklet } from '../lib/WorkletGlobalScope'
 
 const delayLine = /* javascript */ `
 	/**

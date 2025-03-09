@@ -1,6 +1,6 @@
-import './SingleIOProcessor.worklet.js'
+import './SingleIOProcessor.worklet'
 
-import { registerProcessor } from './WorkletGlobalScope.js'
+import { registerProcessor } from '../lib/WorkletGlobalScope'
 
 export const workletName = 'noise-generator';
 

@@ -1,7 +1,7 @@
 import './DelayLine.worklet.js'
 import './SingleIOProcessor.worklet.js'
 
-import { registerProcessor } from './WorkletGlobalScope.js'
+import { registerProcessor } from '../lib/WorkletGlobalScope'
 
 export const workletName = 'delay-processor';
 

@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import * as Tone from 'tone'
 
 import { BitCrusherNode } from '../lib/BitCrusherNode'
+import { getWorkletGlobalScope } from '../lib/WorkletGlobalScope'
 import { workletName } from '../worklets/BitCrusher.worklet'
-import { getWorkletGlobalScope } from '../worklets/WorkletGlobalScope'
 
 // Options interface for the bit crusher hook
 export interface BitCrusherOptions {

@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import * as Tone from 'tone'
 
 import { DelayNode } from '../lib/DelayNode'
+import { getWorkletGlobalScope } from '../lib/WorkletGlobalScope'
 import { workletName as delayWorklet } from '../worklets/DelayProcessor.worklet'
-import { getWorkletGlobalScope } from '../worklets/WorkletGlobalScope'
 
 export interface DelayOptions {
 	delayTime?: number; // in seconds
