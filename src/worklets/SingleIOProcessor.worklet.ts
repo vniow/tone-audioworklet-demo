@@ -14,30 +14,10 @@ export const singleIOProcess = /* javascript */ `
 				numberOfInputs: 1,
 				numberOfOutputs: 1
 			}));
-			/**
-			 * Holds the name of the parameter and a single value of that
-			 * parameter at the current sample
-			 * @type { [name: string]: number }
-			 */
 			this.params = {}
 		}
-
-		/**
-		 * Generate an output sample from the input sample and parameters
-		 * @abstract
-		 * @param input number
-		 * @param channel number
-		 * @param parameters { [name: string]: number }
-		 * @returns number
-		 */
 		generate(){}
 
-		/**
-		 * Update the private params object with the 
-		 * values of the parameters at the given index
-		 * @param parameters { [name: string]: Float32Array },
-		 * @param index number
-		 */
 		updateParams(parameters, index) {
 			for (const paramName in parameters) {
 				const param = parameters[paramName];
@@ -49,11 +29,6 @@ export const singleIOProcess = /* javascript */ `
 			}
 		}
 
-		/**
-		 * Process a single frame of the audio
-		 * @param inputs Float32Array[][]
-		 * @param outputs Float32Array[][]
-		 */
 		process(inputs, outputs, parameters) {
 			const input = inputs[0];
 			const output = outputs[0];

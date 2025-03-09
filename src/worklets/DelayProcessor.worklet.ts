@@ -34,22 +34,11 @@ export const delayProcessorWorklet = /* javascript */ `
     }
 
     generate(input, channel, parameters) {
-      // Get the delay line for this channel
       const delayLine = this.delayLines[channel];
-      
-      // Calculate delay in samples
       const delaySamples = Math.floor(parameters.delayTime * this.sampleRate);
-      
-      // Get delayed signal
       const delayedSignal = delayLine.get(0, delaySamples) || 0;
-      
-      // Calculate new sample with feedback
       const newSample = input + (delayedSignal * parameters.feedback);
-      
-      // Store the new sample
       delayLine.push(0, newSample);
-      
-      // Return the delayed signal for the wet path
       return delayedSignal;
     }
   }
