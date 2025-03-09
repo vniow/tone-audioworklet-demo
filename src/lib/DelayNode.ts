@@ -1,4 +1,3 @@
-// src/lib/DelayNode.ts
 import * as Tone from 'tone'
 
 import { ToneWorkletBase, ToneWorkletBaseOptions } from './ToneWorkletBase'
@@ -18,7 +17,11 @@ export class DelayNode extends ToneWorkletBase<DelayNodeOptions> {
 	private _wetDry: Tone.CrossFade;
 
 	constructor(options: Partial<DelayNodeOptions> = {}) {
-		const opts = Tone.optionsFromArguments(DelayNode.getDefaults(), [options]);
+		// Merge default options with provided options
+		const opts = {
+			...DelayNode.getDefaults(),
+			...options,
+		};
 		super(opts);
 
 		this.input = new Tone.Gain({ context: this.context });

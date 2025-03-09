@@ -14,8 +14,8 @@ const BitCrusherCard = () => {
 	const {
 		bits,
 		setBits,
-		wet, // Extract wet parameter
-		setWet, // Extract setWet function
+		wet,
+		setWet,
 		bitCrusherNode,
 		isInitialized: isBitCrusherInitialized,
 	} = useBitCrusherWorklet({ bits: 4, wet: 0.75 }); // Initialize with default wet value

@@ -19,7 +19,11 @@ export class BitCrusherNode extends ToneWorkletBase<BitCrusherNodeOptions> {
 	private _wetDry: Tone.CrossFade;
 
 	constructor(options: Partial<BitCrusherNodeOptions> = {}) {
-		const opts = Tone.optionsFromArguments(BitCrusherNode.getDefaults(), [options]);
+		// Merge default options with provided options
+		const opts = {
+			...BitCrusherNode.getDefaults(),
+			...options,
+		};
 		super(opts);
 
 		this.input = new Tone.Gain({ context: this.context });
@@ -76,5 +80,3 @@ export class BitCrusherNode extends ToneWorkletBase<BitCrusherNodeOptions> {
 		return this;
 	}
 }
-
-
