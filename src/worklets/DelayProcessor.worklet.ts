@@ -9,9 +9,12 @@ export const delayProcessorWorklet = /* javascript */ `
   class DelayProcessor extends SingleIOProcessor {
     constructor(options) {
       super(options);
-      this.delayLine = new DelayLine(44100, 2); // 1 second delay buffer, stereo
-      this.delayTimeParam = options.parameterData.delayTime || 0.5;
-      this.feedbackParam = options.parameterData.feedback || 0.5;
+      
+      // Create delay line for each channel (assume stereo)
+      this.maxDelayTime = 2; // 2 seconds max delay
+      this.delayLines = new Array(options.outputChannelCount[0]).fill(null).map(() => 
+        new DelayLine(Math.ceil(this.maxDelayTime * options.processorOptions.sampleRate), 1)
+      );
     }
 
     static get parameterDescriptors() {
@@ -19,7 +22,7 @@ export const delayProcessorWorklet = /* javascript */ `
         name: "delayTime",
         defaultValue: 0.5,
         minValue: 0,
-        maxValue: 1,
+        maxValue: 2,
         automationRate: 'k-rate'
       }, {
         name: "feedback",
@@ -31,19 +34,23 @@ export const delayProcessorWorklet = /* javascript */ `
     }
 
     generate(input, channel, parameters) {
-      // Get delay in samples (assuming 44100Hz sample rate)
+      // Get the delay line for this channel
+      const delayLine = this.delayLines[channel];
+      
+      // Calculate delay in samples
       const delaySamples = Math.floor(parameters.delayTime * this.sampleRate);
       
       // Get delayed signal
-      const delayedSignal = this.delayLine.get(channel, delaySamples);
+      const delayedSignal = delayLine.get(0, delaySamples) || 0;
       
-      // Create output with feedback
-      const output = input + delayedSignal * parameters.feedback;
+      // Calculate new sample with feedback
+      const newSample = input + (delayedSignal * parameters.feedback);
       
-      // Store the current output
-      this.delayLine.push(channel, output);
+      // Store the new sample
+      delayLine.push(0, newSample);
       
-      return output;
+      // Return the delayed signal for the wet path
+      return delayedSignal;
     }
   }
 `;

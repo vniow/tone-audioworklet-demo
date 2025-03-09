@@ -1,8 +1,8 @@
-import './App.css';
+import './App.css'
 
-import { CustomOscAndBitCrusherCard } from './components/OscAndBitCrusherCard';
-import { CustomOscAndDelayCard } from './components/OscAndDelayCard';
-import SimpleOscillatorCard from './components/SimpleOscillatorCard';
+import BitCrusherCard from './components/BitCrusherCard'
+import DelayCard from './components/DelayCard'
+import SimpleOscillatorCard from './components/SimpleOscillatorCard'
 
 function App() {
 	return (
@@ -11,8 +11,8 @@ function App() {
 
 			<div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
 				<SimpleOscillatorCard />
-				<CustomOscAndBitCrusherCard />
-				<CustomOscAndDelayCard />
+				<BitCrusherCard />
+				<DelayCard />
 			</div>
 		</div>
 	);

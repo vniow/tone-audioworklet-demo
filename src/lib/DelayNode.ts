@@ -3,7 +3,7 @@ import * as Tone from 'tone'
 
 import { ToneWorkletBase, ToneWorkletBaseOptions } from './ToneWorkletBase'
 
-export interface DelayNodeOptions extends Tone.ToneAudioNodeOptions {
+export interface DelayNodeOptions extends ToneWorkletBaseOptions {
 	delayTime: Tone.Unit.Time;
 	feedback: number;
 	wet?: number;
@@ -17,8 +17,8 @@ export class DelayNode extends ToneWorkletBase<DelayNodeOptions> {
 	readonly feedback: Tone.Param<'normalRange'>;
 	private _wetDry: Tone.CrossFade;
 
-	constructor(...args: any[]) {
-		const opts = Tone.optionsFromArguments(DelayNode.getDefaults(), args);
+	constructor(options: Partial<DelayNodeOptions> = {}) {
+		const opts = Tone.optionsFromArguments(DelayNode.getDefaults(), [options]);
 		super(opts);
 
 		this.input = new Tone.Gain({ context: this.context });
@@ -44,6 +44,10 @@ export class DelayNode extends ToneWorkletBase<DelayNodeOptions> {
 			context: this.context,
 			fade: opts.wet ?? 1,
 		});
+
+		// Connect internal routing
+		this.input.connect(this._wetDry.a);
+		this._wetDry.connect(this.output);
 	}
 
 	protected _audioWorkletName(): string {
@@ -51,23 +55,31 @@ export class DelayNode extends ToneWorkletBase<DelayNodeOptions> {
 	}
 
 	onReady(node: AudioWorkletNode) {
-		// Connect the wet (processed) path
 		Tone.connectSeries(this.input, node, this._wetDry.b);
-
 		// Connect parameters
-		const delayTimeParam = node.parameters.get('delayTime') as AudioParam;
-		const feedbackParam = node.parameters.get('feedback') as AudioParam;
-		this.delayTime.setParam(delayTimeParam);
-		this.feedback.setParam(feedbackParam);
+		const delayTimeParam = node.parameters.get('delayTime');
+		const feedbackParam = node.parameters.get('feedback');
 
-		// Connect the dry path and merge with the wet path
-		this.input.connect(this._wetDry.a);
-		this._wetDry.connect(this.output);
+		if (delayTimeParam && feedbackParam) {
+			this.delayTime.setParam(delayTimeParam);
+			this.feedback.setParam(feedbackParam);
+			console.log('✅ Successfully connected delay parameters');
+		} else {
+			console.error('Missing required parameters in delay processor worklet');
+		}
+
+		// Additional debugging
+		console.log('✅ Delay node setup complete:', {
+			delayTime: this.delayTime.value,
+			feedback: this.feedback.value,
+			wet: this._wetDry.fade.value,
+			context: this.context.state,
+		});
 	}
 
 	static getDefaults(): DelayNodeOptions {
-		return Object.assign(Tone.ToneAudioNode.getDefaults(), {
-			delayTime: 0.25,
+		return Object.assign(ToneWorkletBase.getDefaults(), {
+			delayTime: 0.5,
 			feedback: 0.5,
 			wet: 1,
 		});

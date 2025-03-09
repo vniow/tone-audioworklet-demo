@@ -1,5 +1,3 @@
-import './BitCrusherNode'
-
 import * as Tone from 'tone'
 
 import { workletName } from '../worklets/BitCrusher.worklet'

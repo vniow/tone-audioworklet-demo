@@ -1,11 +1,25 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import * as Tone from 'tone'
 
+import { useBitCrusherWorklet } from '../hooks/useBitCrusherWorklet'
 import { useGain } from '../hooks/useGain'
 import { useOscillator } from '../hooks/useOscillator'
 
-// SimpleOscillatorCard component - now using separate hooks
-const SimpleOscillatorCard = () => {
+// BitCrusherCard component - now using separate hooks
+const BitCrusherCard = () => {
+	// Track if nodes have been connected
+	const nodesConnectedRef = useRef(false);
+
+	// Initialize the bitcrusher worklet
+	const {
+		bits,
+		setBits,
+		wet, // Extract wet parameter
+		setWet, // Extract setWet function
+		bitCrusherNode,
+		isInitialized: isBitCrusherInitialized,
+	} = useBitCrusherWorklet({ bits: 4, wet: 0.75 }); // Initialize with default wet value
+
 	// Initialize the gain node first (will connect to destination)
 	const {
 		gain,
@@ -13,6 +27,7 @@ const SimpleOscillatorCard = () => {
 		gainNode,
 		isInitialized: isGainInitialized,
 	} = useGain({ gain: 0.25 });
+
 	// Initialize the oscillator and connect it to the gain node
 	const {
 		oscillator,
@@ -27,12 +42,45 @@ const SimpleOscillatorCard = () => {
 	} = useOscillator({ frequency: 440, type: 'sine' });
 
 	// Overall initialization state
-	const isInitialized = isGainInitialized && isOscInitialized;
-	if (isInitialized && oscillator && gainNode) {
-		// Connect oscillator to gain node
-		oscillator.connect(gainNode);
-		gainNode.toDestination();
-	}
+	const isInitialized =
+		isGainInitialized && isOscInitialized && isBitCrusherInitialized;
+
+	// Connect nodes only once when all are initialized
+	useEffect(() => {
+		if (
+			isInitialized &&
+			oscillator &&
+			gainNode &&
+			bitCrusherNode &&
+			!nodesConnectedRef.current
+		) {
+			console.log('🔌 Connecting audio nodes...');
+			// Disconnect any existing connections first
+			oscillator.disconnect();
+			gainNode.disconnect();
+			bitCrusherNode.disconnect();
+
+			// Connect oscillator -> gainNode -> bitCrusherNode -> output
+			oscillator.connect(gainNode);
+			gainNode.connect(bitCrusherNode);
+			bitCrusherNode.toDestination();
+
+			// Mark as connected
+			nodesConnectedRef.current = true;
+		}
+
+		// Clean up connections on unmount
+		return () => {
+			if (nodesConnectedRef.current) {
+				console.log('🧹 Cleaning up audio connections');
+				if (oscillator) oscillator.disconnect();
+				if (gainNode) gainNode.disconnect();
+				if (bitCrusherNode) bitCrusherNode.disconnect();
+				nodesConnectedRef.current = false;
+			}
+		};
+	}, [isInitialized, oscillator, gainNode, bitCrusherNode]);
+
 	// Toggle oscillator playback
 	const togglePlayback = useCallback(async () => {
 		// Start audio context if needed
@@ -54,17 +102,22 @@ const SimpleOscillatorCard = () => {
 		console.log('  - type:', type);
 		console.log('  - gain:', gain, '(linear)');
 		console.log('  - Tone.js context state:', Tone.getContext().state);
+		console.log('  - bit depth:', bits);
+		console.log('  - wet/dry mix:', wet);
+		console.log('  - bitCrusherNode:', bitCrusherNode);
+		console.log('  - gainNode:', gainNode);
+		console.log('  - oscillator:', oscillator);
 	};
 
 	return (
 		<div className='bg-white rounded-lg shadow-md p-6 max-w-md'>
-			<h2 className='text-xl font-bold mb-4'>Simple Oscillator</h2>
+			<h2 className='text-xl font-bold mb-4'>BitCrusher Effect</h2>
 
 			<div className='space-y-4'>
 				{/* Frequency control */}
 				<div>
 					<label className='block text-sm font-medium text-gray-700'>
-						Frequency: {frequency} Hz
+						Oscillator frequency: {frequency} Hz
 					</label>
 					<input
 						type='range'
@@ -110,6 +163,47 @@ const SimpleOscillatorCard = () => {
 					/>
 				</div>
 
+				{/* BitCrusher section with divider */}
+				<div className='pt-3 border-t border-gray-200'>
+					<h3 className='font-medium text-gray-700 mb-2'>BitCrusher Effect</h3>
+
+					{/* Bit depth control */}
+					<div className='mb-3'>
+						<label className='block text-sm font-medium text-gray-700'>
+							Bit Depth: {bits} bits
+						</label>
+						<input
+							type='range'
+							min='1'
+							max='16'
+							step='1'
+							value={bits}
+							onChange={(e) => setBits(Number(e.target.value))}
+							className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
+						/>
+					</div>
+
+					{/* Wet/Dry mix control - New slider */}
+					<div>
+						<label className='block text-sm font-medium text-gray-700'>
+							Effect Mix: {Math.round(wet * 100)}%
+						</label>
+						<input
+							type='range'
+							min='0'
+							max='1'
+							step='0.01'
+							value={wet}
+							onChange={(e) => setWet(Number(e.target.value))}
+							className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
+						/>
+						<div className='flex justify-between text-xs text-gray-500 mt-1'>
+							<span>Dry</span>
+							<span>Wet</span>
+						</div>
+					</div>
+				</div>
+
 				{/* Play/Stop button */}
 				<button
 					onClick={togglePlayback}
@@ -148,4 +242,4 @@ const SimpleOscillatorCard = () => {
 	);
 };
 
-export default SimpleOscillatorCard;
+export default BitCrusherCard;
