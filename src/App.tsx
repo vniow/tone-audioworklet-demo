@@ -7,7 +7,7 @@ import DelayCard from './components/DelayCard'
 function App() {
 	return (
 		<div className='container mx-auto min-h-screen px-4 py-6'>
-			<div className='grid gap-6 md:grid-cols-3 lg:grid-cols-6'>
+			<div className='grid gap-6 md:grid-cols-3 lg:grid-cols-5'>
 				<BitCrusherCard />
 				<DelayCard />
 				<BitCrusherDelayCard />
