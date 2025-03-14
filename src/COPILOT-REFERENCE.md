@@ -17,6 +17,7 @@
 - Audio initialization requires user gesture
 - Node connection follows Tone.js chain pattern
 - Parameters use Tone's unit conversion system
+- Avoid using React.FC
 
 ## Type safety
 

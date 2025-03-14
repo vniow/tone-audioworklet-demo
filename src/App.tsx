@@ -3,6 +3,7 @@ import './App.css'
 import BitCrusherCard from './components/BitCrusherCard'
 import BitCrusherDelayCard from './components/BitCrusherDelayCard'
 import DelayCard from './components/DelayCard'
+import NoiseCard from './components/NoiseCard'
 
 function App() {
 	return (
@@ -11,6 +12,7 @@ function App() {
 				<BitCrusherCard />
 				<DelayCard />
 				<BitCrusherDelayCard />
+				<NoiseCard />
 			</div>
 		</div>
 	);
