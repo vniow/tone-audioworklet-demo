@@ -1,5 +1,7 @@
 import * as Tone from 'tone'
 
+import { SliderControl } from './SliderControl'
+
 interface OscillatorControlsProps {
 	frequency: number;
 	type: Tone.ToneOscillatorType;
@@ -16,36 +18,114 @@ export const OscillatorControls = ({
 	return (
 		<>
 			{/* Frequency control */}
-			<div>
-				<label className='block text-xs font-medium text-gray-700'>
-					Oscillator frequency: {frequency} Hz
-				</label>
-				<input
-					type='range'
-					min='20'
-					max='2000'
-					step='1'
-					value={frequency}
-					onChange={(e) => setFrequency(Number(e.target.value))}
-					className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
-				/>
-			</div>
+			<SliderControl
+				label='Oscillator frequency'
+				value={frequency}
+				onChange={setFrequency}
+				displayValue={`${frequency} Hz`}
+				min={1}
+				max={2000}
+				step={1}
+			/>
 
-			{/* Oscillator type selector */}
+			{/* Waveform type selector with icons */}
 			<div>
 				<label className='block text-xs font-medium text-gray-700 mb-1'>
 					Oscillator Type
 				</label>
-				<select
-					value={type}
-					onChange={(e) => setType(e.target.value as Tone.ToneOscillatorType)}
-					className='text-xs block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-				>
-					<option value='sine'>Sine</option>
-					<option value='square'>Square</option>
-					<option value='sawtooth'>Sawtooth</option>
-					<option value='triangle'>Triangle</option>
-				</select>
+				<div className='flex space-x-2'>
+					{/* Sine wave */}
+					<button
+						onClick={() => setType('sine')}
+						className={`p-2 border rounded-md w-16 h-16 flex items-center justify-center ${
+							type === 'sine'
+								? 'bg-indigo-100 border-indigo-500'
+								: 'border-gray-300'
+						}`}
+						title='Sine wave'
+					>
+						<svg
+							viewBox='0 0 60 30'
+							className='w-full h-full'
+						>
+							<path
+								d='M 0,15 C 10,5 20,25 30,15 C 40,5 50,25 60,15'
+								fill='none'
+								stroke='currentColor'
+								strokeWidth='2'
+							/>
+						</svg>
+					</button>
+
+					{/* Square wave */}
+					<button
+						onClick={() => setType('square')}
+						className={`p-2 border rounded-md w-16 h-16 flex items-center justify-center ${
+							type === 'square'
+								? 'bg-indigo-100 border-indigo-500'
+								: 'border-gray-300'
+						}`}
+						title='Square wave'
+					>
+						<svg
+							viewBox='0 0 60 30'
+							className='w-full h-full'
+						>
+							<path
+								d='M 0,25 L 0,5 L 30,5 L 30,25 L 60,25 L 60,5'
+								fill='none'
+								stroke='currentColor'
+								strokeWidth='2'
+							/>
+						</svg>
+					</button>
+
+					{/* Sawtooth wave */}
+					<button
+						onClick={() => setType('sawtooth')}
+						className={`p-2 border rounded-md w-16 h-16 flex items-center justify-center ${
+							type === 'sawtooth'
+								? 'bg-indigo-100 border-indigo-500'
+								: 'border-gray-300'
+						}`}
+						title='Sawtooth wave'
+					>
+						<svg
+							viewBox='0 0 60 30'
+							className='w-full h-full'
+						>
+							<path
+								d='M 0,25 L 20,5 L 20,25 L 40,5 L 40,25 L 60,5'
+								fill='none'
+								stroke='currentColor'
+								strokeWidth='2'
+							/>
+						</svg>
+					</button>
+
+					{/* Triangle wave */}
+					<button
+						onClick={() => setType('triangle')}
+						className={`p-2 border rounded-md w-16 h-16 flex items-center justify-center ${
+							type === 'triangle'
+								? 'bg-indigo-100 border-indigo-500'
+								: 'border-gray-300'
+						}`}
+						title='Triangle wave'
+					>
+						<svg
+							viewBox='0 0 60 30'
+							className='w-full h-full'
+						>
+							<path
+								d='M 0,15 L 15,5 L 30,25 L 45,5 L 60,15'
+								fill='none'
+								stroke='currentColor'
+								strokeWidth='2'
+							/>
+						</svg>
+					</button>
+				</div>
 			</div>
 		</>
 	);

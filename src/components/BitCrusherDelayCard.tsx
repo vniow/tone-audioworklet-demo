@@ -1,16 +1,20 @@
 import { useCallback } from 'react'
-import * as Tone from 'tone'
 
-import { useAudioNodeConnections } from '../hooks/useAudioNodeConnections'
 import { useBitCrusherWorklet } from '../hooks/useBitCrusherWorklet'
 import { useDelayWorklet } from '../hooks/useDelayWorklet'
 import { useGain } from '../hooks/useGain'
-import { useOscillator } from '../hooks/useOscillator'
-import { EffectCardLayout } from './AudioControls/EffectCardLayout'
+import { AudioEffectCard } from './AudioControls/AudioEffectCard'
+import { AudioSourceType } from './AudioControls/AudioSourceProvider'
+import { BitCrusherControls } from './AudioControls/BitCrusherControls'
+import { DelayControls } from './AudioControls/DelayControls'
 import { GainControl } from './AudioControls/GainControl'
-import { OscillatorControls } from './AudioControls/OscillatorControls'
-import { WetDryControl } from './AudioControls/WetDryControl'
 
+/**
+ * BitCrusherDelayCard component that provides a user interface for a combined effect chain
+ *
+ * This component chains an oscillator through both BitCrusher and Delay effects
+ * with independent controls for each effect in the chain.
+ */
 const BitCrusherDelayCard = () => {
 	// Initialize the delay worklet
 	const {
@@ -36,19 +40,6 @@ const BitCrusherDelayCard = () => {
 		isInitialized: isGainInitialized,
 	} = useGain({ gain: 0.25 });
 
-	// Initialize the oscillator
-	const {
-		oscillator,
-		isPlaying,
-		startOscillator,
-		stopOscillator,
-		setFrequency,
-		setType,
-		frequency,
-		type,
-		isInitialized: isOscInitialized,
-	} = useOscillator({ frequency: 440, type: 'sine' });
-
 	// Initialize the bitcrusher worklet
 	const {
 		bits,
@@ -62,142 +53,50 @@ const BitCrusherDelayCard = () => {
 		wet: 0.75,
 	});
 
-	// Overall initialization state
-	const isInitialized =
-		isGainInitialized &&
-		isOscInitialized &&
-		isDelayInitialized &&
-		isBitCrusherInitialized;
-
-	// Use our new hook to handle audio connections
-	useAudioNodeConnections(
-		[oscillator, gainNode, bitCrusherNode, delayNode],
-		isInitialized
-	);
-
-	// Toggle oscillator playback
-	const togglePlayback = useCallback(async () => {
-		await Tone.start();
-		if (isPlaying) {
-			stopOscillator();
-		} else {
-			startOscillator();
-		}
-	}, [isPlaying, startOscillator, stopOscillator]);
-
-	// Debug state helper
-	const debugState = () => {
-		console.log('🔍 Debug State:', {
-			isPlaying,
-			isInitialized,
-			frequency,
-			type,
-			gain: `${gain} (linear)`,
-			context: Tone.getContext().state,
+	// Custom debug function to include effect-specific state
+	const debugState = useCallback(() => {
+		console.log('Additional Debug Info:', {
 			delayTime,
 			feedback,
 			delayWet,
 			bits,
 			crusherWet,
-			delayNode,
-			bitCrusherNode,
-			gainNode,
-			oscillator,
+			gain: `${gain} (linear)`,
 		});
-	};
+	}, [delayTime, feedback, delayWet, bits, crusherWet, gain]);
 
 	return (
-		<EffectCardLayout
+		<AudioEffectCard
 			title='BitCrusher + Delay Effect'
-			isInitialized={isInitialized}
-			isPlaying={isPlaying}
-			onPlay={togglePlayback}
+			sourceType={AudioSourceType.OSCILLATOR}
+			oscillatorOptions={{ frequency: 440, type: 'sine' }}
+			effectNodes={[gainNode, bitCrusherNode, delayNode]}
+			effectsInitialized={
+				isGainInitialized && isBitCrusherInitialized && isDelayInitialized
+			}
 			onDebug={debugState}
 		>
-			<OscillatorControls
-				frequency={frequency}
-				type={type}
-				setFrequency={setFrequency}
-				setType={setType}
-			/>
-
 			<GainControl
 				gain={gain}
 				setGain={setGain}
 			/>
 
-			{/* BitCrusher section with divider */}
-			<div className='pt-3 border-t border-gray-200'>
-				<h3 className='font-medium text-xs text-gray-700 mb-2'>
-					BitCrusher Effect
-				</h3>
+			<BitCrusherControls
+				bits={bits}
+				setBits={setBits}
+				wet={crusherWet}
+				setWet={setCrusherWet}
+			/>
 
-				{/* Bit depth control */}
-				<div className='mb-3'>
-					<label className='block text-xs font-medium text-gray-700'>
-						Bit Depth: {bits} bits
-					</label>
-					<input
-						type='range'
-						min='1'
-						max='16'
-						step='1'
-						value={bits}
-						onChange={(e) => setBits(Number(e.target.value))}
-						className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
-					/>
-				</div>
-
-				<WetDryControl
-					wet={crusherWet}
-					setWet={setCrusherWet}
-					label='BitCrusher Mix'
-				/>
-			</div>
-
-			{/* Delay section with divider */}
-			<div className='pt-3 border-t border-gray-200'>
-				<h3 className='font-medium text-xs text-gray-700 mb-2'>Delay Effect</h3>
-
-				{/* Delay Time control */}
-				<div className='mb-3'>
-					<label className='block text-xs font-medium text-gray-700'>
-						Delay Time: {(delayTime * 1000).toFixed(0)}ms
-					</label>
-					<input
-						type='range'
-						min='0'
-						max='2'
-						step='0.01'
-						value={delayTime}
-						onChange={(e) => setDelayTime(Number(e.target.value))}
-						className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
-					/>
-				</div>
-
-				{/* Feedback control */}
-				<div className='mb-3'>
-					<label className='block text-xs font-medium text-gray-700'>
-						Feedback: {Math.round(feedback * 100)}%
-					</label>
-					<input
-						type='range'
-						min='0'
-						max='0.99'
-						step='0.01'
-						value={feedback}
-						onChange={(e) => setFeedback(Number(e.target.value))}
-						className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
-					/>
-				</div>
-
-				<WetDryControl
-					wet={delayWet}
-					setWet={setDelayWet}
-					label='Delay Mix'
-				/>
-			</div>
-		</EffectCardLayout>
+			<DelayControls
+				delayTime={delayTime}
+				setDelayTime={setDelayTime}
+				feedback={feedback}
+				setFeedback={setFeedback}
+				wet={delayWet}
+				setWet={setDelayWet}
+			/>
+		</AudioEffectCard>
 	);
 };
 

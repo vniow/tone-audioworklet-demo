@@ -1,15 +1,18 @@
 import { useCallback } from 'react'
-import * as Tone from 'tone'
 
-import { useAudioNodeConnections } from '../hooks/useAudioNodeConnections'
 import { useBitCrusherWorklet } from '../hooks/useBitCrusherWorklet'
 import { useGain } from '../hooks/useGain'
-import { useOscillator } from '../hooks/useOscillator'
-import { EffectCardLayout } from './AudioControls/EffectCardLayout'
+import { AudioEffectCard } from './AudioControls/AudioEffectCard'
+import { AudioSourceType } from './AudioControls/AudioSourceProvider'
+import { BitCrusherControls } from './AudioControls/BitCrusherControls'
 import { GainControl } from './AudioControls/GainControl'
-import { OscillatorControls } from './AudioControls/OscillatorControls'
-import { WetDryControl } from './AudioControls/WetDryControl'
 
+/**
+ * BitCrusherCard component that provides a user interface for the bit crusher effect
+ *
+ * This component combines an oscillator source with a bit crusher effect and
+ * volume control in a user-friendly card interface.
+ */
 const BitCrusherCard = () => {
 	// Initialize the bitcrusher worklet
 	const {
@@ -29,105 +32,36 @@ const BitCrusherCard = () => {
 		isInitialized: isGainInitialized,
 	} = useGain({ gain: 0.25 });
 
-	// Initialize the oscillator
-	const {
-		oscillator,
-		isPlaying,
-		startOscillator,
-		stopOscillator,
-		setFrequency,
-		setType,
-		frequency,
-		type,
-		isInitialized: isOscInitialized,
-	} = useOscillator({ frequency: 440, type: 'sine' });
-
-	// Overall initialization state
-	const isInitialized =
-		isGainInitialized && isOscInitialized && isBitCrusherInitialized;
-
-	// Use our new hook to handle audio connections
-	useAudioNodeConnections(
-		[oscillator, gainNode, bitCrusherNode],
-		isInitialized
-	);
-
-	// Toggle oscillator playback
-	const togglePlayback = useCallback(async () => {
-		await Tone.start();
-		if (isPlaying) {
-			stopOscillator();
-		} else {
-			startOscillator();
-		}
-	}, [isPlaying, startOscillator, stopOscillator]);
-
-	// Debug state helper
-	const debugState = () => {
-		console.log('🔍 Debug State:', {
-			isPlaying,
-			isInitialized,
-			frequency,
-			type,
-			gain: `${gain} (linear)`,
-			context: Tone.getContext().state,
+	// Custom debug function to include effect-specific state
+	const debugState = useCallback(() => {
+		console.log('Additional Debug Info:', {
 			bits,
 			wet,
-			bitCrusherNode,
-			gainNode,
-			oscillator,
+			gain: `${gain} (linear)`,
 		});
-	};
+	}, [bits, wet, gain]);
 
 	return (
-		<EffectCardLayout
+		<AudioEffectCard
 			title='BitCrusher Effect'
-			isInitialized={isInitialized}
-			isPlaying={isPlaying}
-			onPlay={togglePlayback}
+			sourceType={AudioSourceType.OSCILLATOR}
+			oscillatorOptions={{ frequency: 440, type: 'sine' }}
+			effectNodes={[gainNode, bitCrusherNode]}
+			effectsInitialized={isGainInitialized && isBitCrusherInitialized}
 			onDebug={debugState}
 		>
-			<OscillatorControls
-				frequency={frequency}
-				type={type}
-				setFrequency={setFrequency}
-				setType={setType}
-			/>
-
 			<GainControl
 				gain={gain}
 				setGain={setGain}
 			/>
 
-			{/* BitCrusher section with divider */}
-			<div className='pt-3 border-t border-gray-200'>
-				<h3 className='font-medium text-xs text-gray-700 mb-2'>
-					BitCrusher Effect
-				</h3>
-
-				{/* Bit depth control */}
-				<div className='mb-3'>
-					<label className='block text-xs font-medium text-gray-700'>
-						Bit Depth: {bits} bits
-					</label>
-					<input
-						type='range'
-						min='1'
-						max='16'
-						step='1'
-						value={bits}
-						onChange={(e) => setBits(Number(e.target.value))}
-						className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer'
-					/>
-				</div>
-
-				<WetDryControl
-					wet={wet}
-					setWet={setWet}
-					label='BitCrusher Mix'
-				/>
-			</div>
-		</EffectCardLayout>
+			<BitCrusherControls
+				bits={bits}
+				setBits={setBits}
+				wet={wet}
+				setWet={setWet}
+			/>
+		</AudioEffectCard>
 	);
 };
 

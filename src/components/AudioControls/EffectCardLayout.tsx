@@ -1,16 +1,49 @@
 import { ReactNode } from 'react'
 
+import { ButtonControl, ButtonVariant } from './ButtonControl'
 import { StatusIndicators } from './StatusIndicators'
 
+/**
+ * Props for the EffectCardLayout component
+ */
 interface EffectCardLayoutProps {
+	/**
+	 * Title of the effect card
+	 */
 	title: string;
+
+	/**
+	 * Whether the audio nodes are initialized
+	 */
 	isInitialized: boolean;
+
+	/**
+	 * Whether the audio is playing
+	 */
 	isPlaying: boolean;
+
+	/**
+	 * Function to toggle playback on/off
+	 */
 	onPlay: () => void;
+
+	/**
+	 * Function to trigger debugging output
+	 */
 	onDebug: () => void;
+
+	/**
+	 * Child components to render within the card
+	 */
 	children: ReactNode;
 }
 
+/**
+ * A standardized layout component for audio effect panels
+ *
+ * This component provides a consistent card layout with title,
+ * status indicators, play/stop controls, and debug functionality.
+ */
 export const EffectCardLayout = ({
 	title,
 	isInitialized,
@@ -30,25 +63,23 @@ export const EffectCardLayout = ({
 					isInitialized={isInitialized}
 					isPlaying={isPlaying}
 				/>
+
 				{/* Play/Stop button */}
-				<button
+				<ButtonControl
 					onClick={onPlay}
-					className={`w-full px-3 py-1.5 text-white font-medium rounded-md ${
-						isPlaying
-							? 'bg-red-500 hover:bg-red-600'
-							: 'bg-green-500 hover:bg-green-600'
-					}`}
+					variant={isPlaying ? ButtonVariant.DANGER : ButtonVariant.SUCCESS}
 				>
 					{isPlaying ? 'Stop' : 'Play'}
-				</button>
+				</ButtonControl>
 
 				{/* Debug button */}
-				<button
+				<ButtonControl
 					onClick={onDebug}
-					className='w-full px-3 py-1.5 text-white font-medium rounded-md bg-blue-500 hover:bg-blue-600'
+					variant={ButtonVariant.INFO}
 				>
 					Debug State
-				</button>
+				</ButtonControl>
+
 				{children}
 			</div>
 		</div>
