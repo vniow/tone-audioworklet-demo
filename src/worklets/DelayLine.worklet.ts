@@ -1,6 +1,6 @@
 import './ToneAudioWorkletProcessor.worklet.js'
 
-import { addUtility } from '../lib/WorkletGlobalScope'
+import { addUtility } from '../lib/WorkletGlobalScope.js'
 
 /**
  * DelayLine implementation for audio delay effects

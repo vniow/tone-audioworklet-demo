@@ -63,13 +63,18 @@ export const ButtonControl = ({
 	className = '',
 	disabled = false,
 }: ButtonControlProps) => {
-	// Map variants to TailwindCSS classes
+	// Map variants to TailwindCSS classes with dark mode support
 	const variantStyles = {
-		[ButtonVariant.PRIMARY]: 'bg-blue-500 hover:bg-blue-600 text-white',
-		[ButtonVariant.SECONDARY]: 'bg-gray-500 hover:bg-gray-600 text-white',
-		[ButtonVariant.SUCCESS]: 'bg-green-500 hover:bg-green-600 text-white',
-		[ButtonVariant.DANGER]: 'bg-red-500 hover:bg-red-600 text-white',
-		[ButtonVariant.INFO]: 'bg-indigo-500 hover:bg-indigo-600 text-white',
+		[ButtonVariant.PRIMARY]:
+			'bg-blue-500 hover:bg-blue-600 text-white dark:bg-blue-600 dark:hover:bg-blue-700',
+		[ButtonVariant.SECONDARY]:
+			'bg-gray-500 hover:bg-gray-600 text-white dark:bg-gray-600 dark:hover:bg-gray-700',
+		[ButtonVariant.SUCCESS]:
+			'bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700',
+		[ButtonVariant.DANGER]:
+			'bg-red-500 hover:bg-red-600 text-white dark:bg-red-600 dark:hover:bg-red-700',
+		[ButtonVariant.INFO]:
+			'bg-indigo-500 hover:bg-indigo-600 text-white dark:bg-indigo-600 dark:hover:bg-indigo-700',
 	};
 
 	return (

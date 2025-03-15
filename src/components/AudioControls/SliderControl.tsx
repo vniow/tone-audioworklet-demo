@@ -71,11 +71,11 @@ export const SliderControl = ({
 
 	return (
 		<div className={`mb-3.5 ${className}`}>
-			<label className='block text-xs font-medium text-gray-700'>
+			<label className='block text-xs font-medium text-gray-700 dark:text-gray-300'>
 				{label}: {displayValue ?? value}
 			</label>
 
-			{/* The slider input */}
+			{/* The slider input with dark mode support */}
 			<input
 				type='range'
 				value={value}
@@ -87,13 +87,14 @@ export const SliderControl = ({
 					w-full
 					h-4
 					bg-gray-300
+					dark:bg-gray-600
 					rounded-sm
 					appearance-none
 					cursor-pointer
 					outline-offset-1
 					outline-pink-500
-					
-					'
+					dark:outline-pink-400
+				'
 			/>
 		</div>
 	);

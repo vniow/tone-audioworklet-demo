@@ -53,9 +53,11 @@ export const EffectCardLayout = ({
 	children,
 }: EffectCardLayoutProps) => {
 	return (
-		<div className='bg-white rounded-lg shadow-md p-6 max-w-md'>
+		<div className='bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 max-w-md transition-colors'>
 			<div className='min-h-[3rem] mb-4'>
-				<h2 className='text-sm font-semibold'>{title}</h2>
+				<h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+					{title}
+				</h2>
 			</div>
 
 			<div className='space-y-3 text-xs'>
