@@ -1,1 +1,32 @@
 @import 'tailwindcss';
+
+/* Define custom dark variant for Tailwind v4 */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Custom animations and styles for logos */
+@layer utilities {
+	@keyframes logo-spin {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	.animate-spin-slow {
+		animation: logo-spin infinite 20s linear;
+	}
+
+	.logo {
+		transition: filter 300ms;
+	}
+
+	.logo:hover {
+		filter: drop-shadow(0 0 2em #646cffaa);
+	}
+
+	.logo.react:hover {
+		filter: drop-shadow(0 0 2em #61dafbaa);
+	}
+}

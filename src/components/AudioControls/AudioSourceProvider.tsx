@@ -3,8 +3,6 @@ import * as Tone from 'tone'
 
 import { useNoiseWorklet } from '../../hooks/useNoiseWorklet'
 import { useOscillator } from '../../hooks/useOscillator'
-// import { NoiseType } from '../../worklets/NoiseProcessor.worklet'
-// import { NoiseControls } from './NoiseControls'
 import { OscillatorControls } from './OscillatorControls'
 
 /**
@@ -124,12 +122,7 @@ export const AudioSourceProvider = ({
 				setFrequency={setFrequency}
 				setType={setType}
 			/>
-		) : (
-			<NoiseControls
-			// noiseType={noiseType}
-			// setNoiseType={setNoiseType}
-			/>
-		);
+		) : null;
 
 	// Use the render prop pattern to pass all necessary data to children
 	return (
