@@ -58,7 +58,7 @@ export const useDelayWorklet = (
 	// create delay node once on mount
 	useEffect(() => {
 		mountedRef.current = true;
-		console.log('🎛️ Initializing Delay worklet...');
+		console.log('🎛️ initializing delay worklet...');
 
 		const setupDelayWorklet = async () => {
 			try {
@@ -74,10 +74,10 @@ export const useDelayWorklet = (
 				try {
 					await Tone.getContext().addAudioWorkletModule(workletUrl);
 					console.log(
-						`Successfully registered audio worklets: ${delayWorklet}`
+						`successfully registered audio worklets: ${delayWorklet}`
 					);
 				} catch (error) {
-					console.error('Failed to register audio worklets:', error);
+					console.error('failed to register audio worklets:', error);
 					throw error;
 				} finally {
 					URL.revokeObjectURL(workletUrl);
@@ -98,7 +98,7 @@ export const useDelayWorklet = (
 				setIsInitialized(true);
 
 				console.log(
-					'✅ Delay node initialized with delay time:',
+					'✅ delay node initialized with delay time:',
 					delayTimeRef.current,
 					'feedback:',
 					feedbackRef.current,
@@ -106,7 +106,7 @@ export const useDelayWorklet = (
 					wetRef.current
 				);
 			} catch (error) {
-				console.error('❌ Error initializing Delay node:', error);
+				console.error('❌ error initializing delay node:', error);
 				if (mountedRef.current) {
 					setIsInitialized(false);
 				}
@@ -117,7 +117,7 @@ export const useDelayWorklet = (
 
 		// cleanup on unmount
 		return () => {
-			console.log('🧹 Cleaning up Delay node');
+			console.log('🧹 cleaning up delay node');
 			mountedRef.current = false;
 			if (delayNodeRef.current) {
 				delayNodeRef.current.disconnect();
@@ -139,7 +139,7 @@ export const useDelayWorklet = (
 			} else {
 				delayNodeRef.current.delayTime.value = newDelayTime;
 			}
-			console.log(`⏱️ Updated delay time: ${newDelayTime}s`);
+			console.log(`⏱️ updated delay time: ${newDelayTime}s`);
 		}
 	};
 
@@ -154,7 +154,7 @@ export const useDelayWorklet = (
 			} else {
 				delayNodeRef.current.feedback.value = newFeedback;
 			}
-			console.log(`🔄 Updated feedback: ${newFeedback}`);
+			console.log(`🔄 updated feedback: ${newFeedback}`);
 		}
 	};
 
@@ -164,9 +164,11 @@ export const useDelayWorklet = (
 		wetRef.current = newWet;
 
 		if (delayNodeRef.current) {
+			
 			delayNodeRef.current.wet = newWet;
-			console.log(`🔊 Updated wet mix: ${newWet}`);
+			console.log(`🔊 updated wet mix: ${newWet}`);
 		}
+		
 	};
 
 	return {

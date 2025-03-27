@@ -37,10 +37,10 @@ export const BitCrusherControls = ({
 	setWet,
 }: BitCrusherControlsProps) => {
 	return (
-		<EffectSection title='BitCrusher Effect'>
+		<EffectSection title='bit crusher effect'>
 			{/* bit depth control */}
 			<SliderControl
-				label='Bit Depth'
+				label='bit depth'
 				value={bits}
 				onChange={setBits}
 				displayValue={`${bits} bits`}
@@ -52,7 +52,7 @@ export const BitCrusherControls = ({
 			<WetDryControl
 				wet={wet}
 				setWet={setWet}
-				label='BitCrusher Mix'
+				label='bit crusher mix'
 			/>
 		</EffectSection>
 	);

@@ -49,10 +49,10 @@ export const DelayControls = ({
 	setWet,
 }: DelayControlsProps) => {
 	return (
-		<EffectSection title='Delay Effect'>
+		<EffectSection title='delay effect'>
 			{/* delay time control */}
 			<SliderControl
-				label='Delay Time'
+				label='delay time'
 				value={delayTime}
 				onChange={setDelayTime}
 				displayValue={`${(delayTime * 1000).toFixed(0)}ms`}
@@ -63,7 +63,7 @@ export const DelayControls = ({
 
 			{/* feedback control */}
 			<SliderControl
-				label='Feedback'
+				label='feedback'
 				value={feedback}
 				onChange={setFeedback}
 				displayValue={`${Math.round(feedback * 100)}%`}
@@ -75,7 +75,7 @@ export const DelayControls = ({
 			<WetDryControl
 				wet={wet}
 				setWet={setWet}
-				label='Delay Mix'
+				label='delay mix'
 			/>
 		</EffectSection>
 	);

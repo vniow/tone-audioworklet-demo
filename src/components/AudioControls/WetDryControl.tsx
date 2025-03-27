@@ -17,7 +17,7 @@ interface WetDryControlProps {
 
 	/**
 	 * optional label override
-	 * @default "Effect Mix"
+	 * @default "effect mix"
 	 */
 	label?: string;
 }
@@ -28,7 +28,7 @@ interface WetDryControlProps {
 export const WetDryControl = ({
 	wet,
 	setWet,
-	label = 'Effect Mix',
+	label = 'effect mix',
 }: WetDryControlProps) => {
 	return (
 		<div>
@@ -42,8 +42,8 @@ export const WetDryControl = ({
 				step={0.01}
 			/>
 			<div className='flex justify-between text-xs text-gray-700 dark:text-gray-300 -mt-2'>
-				<span>Dry</span>
-				<span>Wet</span>
+				<span>dry</span>
+				<span>wet</span>
 			</div>
 		</div>
 	);

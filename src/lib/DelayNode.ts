@@ -121,11 +121,6 @@ export class DelayNode extends ToneWorkletBase<DelayNodeOptions> {
 			fade: opts.wet ?? 1,
 		});
 
-		// Connect internal routing for dry signal path
-		// (The wet connection happens in onReady once the worklet is available)
-		this.input.connect(this._wetDry.a);
-		this._wetDry.connect(this.output);
-
 		if (this.debug) {
 			console.log(
 				`🎛️ Created DelayNode with delayTime=${opts.delayTime}, feedback=${opts.feedback}, wet=${opts.wet ?? 1}`
@@ -166,6 +161,10 @@ export class DelayNode extends ToneWorkletBase<DelayNodeOptions> {
 				'⚠️ Missing required parameters in delay processor worklet'
 			);
 		}
+
+		// Connect the dry path and merge with the wet path
+		this.input.connect(this._wetDry.a);
+		this._wetDry.connect(this.output);
 
 		// Additional debugging
 		if (this.debug) {
@@ -215,12 +214,17 @@ export class DelayNode extends ToneWorkletBase<DelayNodeOptions> {
 	 * @param value - New wet/dry mix (0-1)
 	 */
 	set wet(value: number) {
-		this._wetDry.fade.value = value;
-
-		if (this.debug) {
-			console.log(`🔊 Delay wet mix updated: ${value}`);
+		// Use Tone.js rampTo on the fade parameter if available
+		if (typeof this._wetDry.fade.rampTo === 'function') {
+		  this._wetDry.fade.rampTo(value, 0.05); // 50ms ramp
+		} else {
+		  this._wetDry.fade.value = value;
 		}
-	}
+		
+		if (this.debug) {
+		  console.log(`🔊 Delay wet mix updated: ${value}`);
+		}
+	  }
 
 	/**
 	 * Clean up and release resources

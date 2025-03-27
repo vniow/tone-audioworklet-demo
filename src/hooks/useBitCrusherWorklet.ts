@@ -89,13 +89,13 @@ export const useBitCrusherWorklet = (
 				setIsInitialized(true);
 
 				console.log(
-					'✅ BitCrusher node initialized with bits:',
+					'✅ bit crusher node initialized with bits:',
 					bits,
 					'wet:',
 					wet
 				);
 			} catch (error) {
-				console.error('❌ Error initializing BitCrusher node:', error);
+				console.error('❌ error initializing bit crusher node:', error);
 			}
 		};
 
@@ -103,7 +103,7 @@ export const useBitCrusherWorklet = (
 
 		// cleanup on unmount
 		return () => {
-			console.log('🧹 cleaning up BitCrusher node');
+			console.log('🧹 cleaning up bit crusher node');
 			if (bitCrusherNodeRef.current) {
 				bitCrusherNodeRef.current.disconnect();
 				bitCrusherNodeRef.current.dispose();
@@ -123,11 +123,11 @@ export const useBitCrusherWorklet = (
 			} else {
 				bitCrusherNodeRef.current.bits.value = newBits;
 			}
-			console.log(`🔊 Updated bits value: ${newBits}`);
+			console.log(`🔊 updated bits value: ${newBits}`);
 		}
 	};
 
-	// function to set wet/dry mix with smoothing
+	// function to set wet/dry mix
 	const setWet = (newWet: number) => {
 		setWetState(newWet);
 		wetRef.current = newWet;

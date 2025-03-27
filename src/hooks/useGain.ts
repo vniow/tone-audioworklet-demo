@@ -36,7 +36,7 @@ export const useGain = (options: GainOptions = {}): GainHookResult => {
 
 	// create gain node once on mount
 	useEffect(() => {
-		console.log('🎛️ Initializing gain node...');
+		console.log('🎛️ initializing gain node...');
 
 		// create a gain node
 		const newGainNode = new Tone.Gain(gainValueRef.current);
@@ -45,7 +45,7 @@ export const useGain = (options: GainOptions = {}): GainHookResult => {
 		gainNodeRef.current = newGainNode;
 		setIsInitialized(true);
 
-		console.log('✅ Gain node initialized with value:', gainValueRef.current);
+		console.log('✅ gain node initialized with value:', gainValueRef.current);
 
 		// cleanup on unmount
 		return () => {

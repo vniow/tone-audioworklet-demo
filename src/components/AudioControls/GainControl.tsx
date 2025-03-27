@@ -27,7 +27,7 @@ interface GainControlProps {
 export const GainControl = ({
 	gain,
 	setGain,
-	label = 'Volume',
+	label = 'volume',
 }: GainControlProps) => {
 	return (
 		<SliderControl

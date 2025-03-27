@@ -1,14 +1,13 @@
 import { useCallback } from 'react'
 import * as Tone from 'tone'
 
-import { useAudioNodeConnections } from '../hooks/useAudioNodeConnections'
 import { useGain } from '../hooks/useGain'
 import { useNoiseWorklet } from '../hooks/useNoiseWorklet'
 import { EffectCardLayout } from './AudioControls/EffectCardLayout'
 import { GainControl } from './AudioControls/GainControl'
 
 /**
- * component wraps the white noise generator worklet with a volume control
+ * wraps the white noise generator worklet with a volume control
  */
 const NoiseCard = () => {
 	// initialize the white noise generator worklet
@@ -31,9 +30,11 @@ const NoiseCard = () => {
 	// overall initialization state
 	const isInitialized = isNoiseInitialized && isGainInitialized;
 
-	// use our hook to handle audio connections
-	useAudioNodeConnections([noiseNode, gainNode], isInitialized);
-
+	// connect noise to gain
+	if (noiseNode && gainNode) {
+		noiseNode.connect(gainNode);
+		gainNode.toDestination();
+	}
 	// toggle noise playback
 	const togglePlayback = useCallback(async () => {
 		await Tone.start();
@@ -46,7 +47,7 @@ const NoiseCard = () => {
 
 	// debug state helper
 	const debugState = () => {
-		console.log('🔍 Debug State:', {
+		console.log('🔍 debug state:', {
 			isPlaying,
 			isInitialized,
 			gain: `${gain} (linear)`,
@@ -58,7 +59,7 @@ const NoiseCard = () => {
 
 	return (
 		<EffectCardLayout
-			title='White Noise Generator'
+			title='white noise generator'
 			isInitialized={isInitialized}
 			isPlaying={isPlaying}
 			onPlay={togglePlayback}
@@ -68,7 +69,7 @@ const NoiseCard = () => {
 			<GainControl
 				gain={gain}
 				setGain={setGain}
-				label='Volume'
+				label='volume'
 			/>
 		</EffectCardLayout>
 	);

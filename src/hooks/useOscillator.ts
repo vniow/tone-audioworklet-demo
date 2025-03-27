@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import * as Tone from 'tone'
 
-// Options interface for the oscillator hook
+// options interface
 export interface OscillatorOptions {
 	frequency?: number;
 	type?: Tone.ToneOscillatorType;
 	autostart?: boolean;
 }
 
-// Return type for the hook
+// return type for the hook
 export interface OscillatorHookResult {
 	oscillator: Tone.Oscillator | null;
 	isInitialized: boolean;
@@ -22,19 +22,17 @@ export interface OscillatorHookResult {
 }
 
 /**
- * A hook to create and manage a Tone.js oscillator
+ * hook to create and manage a Tone.js oscillator
  *
- * @param options - Configuration options for the oscillator
- * @returns The oscillator control interface
+ * @param options - configuration options for the oscillator
+ * @returns oscillator control interface
  */
 export const useOscillator = (
 	options: OscillatorOptions = {}
 ): OscillatorHookResult => {
-	// Default values
 	const defaultFrequency = 440;
 	const defaultType: Tone.ToneOscillatorType = 'sine';
 
-	// State
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [frequency, setFrequencyState] = useState(
@@ -44,25 +42,22 @@ export const useOscillator = (
 		options.type || defaultType
 	);
 
-	// Ref for the oscillator node
+	// ref for the oscillator node
 	const oscillatorRef = useRef<Tone.Oscillator | null>(null);
 
-	// Create oscillator on mount
+	// create oscillator on mount
 	useEffect(() => {
-		console.log('🎛️ Initializing oscillator...');
+		console.log('🎛️ initializing oscillator...');
 
-		// Create oscillator with correct constructor arguments
 		const osc = new Tone.Oscillator(frequency, type);
-
-		// Store reference
 		oscillatorRef.current = osc;
 		setIsInitialized(true);
 
-		console.log('✅ Oscillator initialized');
+		console.log('✅ oscillator initialized');
 
-		// Cleanup on unmount
+		// cleanup on unmount
 		return () => {
-			console.log('🧹 Cleaning up oscillator');
+			console.log('🧹 cleaning up oscillator');
 			if (oscillatorRef.current) {
 				if (oscillatorRef.current.state === 'started') {
 					oscillatorRef.current.stop();
@@ -72,13 +67,13 @@ export const useOscillator = (
 				oscillatorRef.current = null;
 			}
 		};
-	}, []); // Empty dependency array - only run once on mount
+	}, []); // empty dependency array - only run once on mount
 
 	const setFrequency = (newFrequency: number) => {
 		setFrequencyState(newFrequency);
 		if (oscillatorRef.current) {
 			oscillatorRef.current.frequency.value = newFrequency;
-			console.log(`🔊 Updated oscillator frequency: ${newFrequency}`);
+			console.log(`🔊 updated oscillator frequency: ${newFrequency}`);
 		}
 	};
 
@@ -86,11 +81,11 @@ export const useOscillator = (
 		setTypeState(newType);
 		if (oscillatorRef.current) {
 			oscillatorRef.current.type = newType;
-			console.log(`🔊 Updated oscillator type: ${newType}`);
+			console.log(`🔊 updated oscillator type: ${newType}`);
 		}
 	};
 
-	// Method to start oscillator
+	// start oscillator
 	const startOscillator = async () => {
 		if (oscillatorRef.current && !isPlaying) {
 			// Ensure audio context is running
@@ -98,16 +93,16 @@ export const useOscillator = (
 
 			oscillatorRef.current.start();
 			setIsPlaying(true);
-			console.log('▶️ Oscillator started');
+			console.log('▶️ oscillator started');
 		}
 	};
 
-	// Method to stop oscillator
+	// stop oscillator
 	const stopOscillator = () => {
 		if (oscillatorRef.current && isPlaying) {
 			oscillatorRef.current.stop();
 			setIsPlaying(false);
-			console.log('⏹️ Oscillator stopped');
+			console.log('⏹️ oscillator stopped');
 		}
 	};
 

@@ -69,7 +69,7 @@ export const EffectCardLayout = ({
 					onClick={onPlay}
 					variant={isPlaying ? ButtonVariant.DANGER : ButtonVariant.SUCCESS}
 				>
-					{isPlaying ? 'Stop' : 'Play'}
+					{isPlaying ? 'stop' : 'play'}
 				</ButtonControl>
 
 				{/* debug button */}

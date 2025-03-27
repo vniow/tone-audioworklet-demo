@@ -7,6 +7,9 @@ interface OscillatorControlsProps {
 	type: Tone.ToneOscillatorType;
 	setFrequency: (value: number) => void;
 	setType: (type: Tone.ToneOscillatorType) => void;
+	isPlaying?: boolean;
+	togglePlayback?: () => Promise<void>;
+
 }
 
 export const OscillatorControls = ({
@@ -14,12 +17,16 @@ export const OscillatorControls = ({
 	type,
 	setFrequency,
 	setType,
+
+
 }: OscillatorControlsProps) => {
 	return (
 		<>
+
+
 			{/* frequency control */}
 			<SliderControl
-				label='Oscillator frequency'
+				label='oscillator frequency'
 				value={frequency}
 				onChange={setFrequency}
 				displayValue={`${frequency} Hz`}
@@ -42,7 +49,7 @@ export const OscillatorControls = ({
 								? 'bg-indigo-300 border-indigo-500'
 								: 'border-gray-300'
 						}`}
-						title='Sine wave'
+						title='sine wave'
 					>
 						<svg
 							viewBox='0 0 60 30'
@@ -65,7 +72,7 @@ export const OscillatorControls = ({
 								? 'bg-indigo-300 border-indigo-500'
 								: 'border-gray-300'
 						}`}
-						title='Square wave'
+						title='square wave'
 					>
 						<svg
 							viewBox='0 0 60 30'
@@ -88,7 +95,7 @@ export const OscillatorControls = ({
 								? 'bg-indigo-300 border-indigo-500'
 								: 'border-gray-300'
 						}`}
-						title='Sawtooth wave'
+						title='sawtooth wave'
 					>
 						<svg
 							viewBox='0 0 60 30'
@@ -111,7 +118,7 @@ export const OscillatorControls = ({
 								? 'bg-indigo-300 border-indigo-500'
 								: 'border-gray-300'
 						}`}
-						title='Triangle wave'
+						title='triangle wave'
 					>
 						<svg
 							viewBox='0 0 60 30'

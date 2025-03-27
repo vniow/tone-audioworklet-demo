@@ -1,25 +1,30 @@
 import { useCallback } from "react";
 import * as Tone from "tone";
 
+import { useOscillator } from "../hooks/useOscillator";
 import { useGain } from "../hooks/useGain";
-import { useNoiseWorklet } from "../hooks/useNoiseWorklet";
-import { useBitCrusherWorklet } from "../hooks/useBitCrusherWorklet";
 import { EffectCardLayout } from "./AudioControls/EffectCardLayout";
-import { BitCrusherControls } from "./AudioControls/BitCrusherControls";
 import { GainControl } from "./AudioControls/GainControl";
+import { OscillatorControls } from "./AudioControls/OscillatorControls";
+import { useBitCrusherWorklet } from "../hooks/useBitCrusherWorklet";
+import { BitCrusherControls } from "./AudioControls/BitCrusherControls";
 
 /**
- * wraps the white noise generator worklet with a bit crusher worklet and a volume control
+ * component combines oscillator with bitcrusher effect and volume control
  */
-const NoiseBitCrusherCard = () => {
-  // initialize the white noise generator worklet
+const OscBitCrusherCard = () => {
+  // initialise the oscillator
   const {
-    startNoise,
-    stopNoise,
-    noiseNode,
-    isInitialized: isNoiseInitialized,
+    oscillator,
+    isInitialized: isOscillatorInitialized,
     isPlaying,
-  } = useNoiseWorklet();
+    startOscillator,
+    stopOscillator,
+    setFrequency,
+    setType,
+    frequency,
+    type,
+  } = useOscillator({ frequency: 440, type: "square" });
 
   // initialize the bitcrusher worklet
   const {
@@ -40,55 +45,66 @@ const NoiseBitCrusherCard = () => {
   } = useGain({ gain: 0.25 });
 
   // overall initialization state
-  const isInitialized =
-    isNoiseInitialized && isBitCrusherInitialized && isGainInitialized;
+  const isInitialized = isOscillatorInitialized && isBitCrusherInitialized && isGainInitialized;
 
-  // connect noise to gain
-  if (noiseNode && bitCrusherNode && gainNode) {
-    noiseNode.connect(bitCrusherNode);
-	bitCrusherNode.connect(gainNode);
+  // connect oscillator to bitcrusher to gain to output
+  if (oscillator && bitCrusherNode && gainNode) {
+    oscillator.connect(bitCrusherNode);
+    bitCrusherNode.connect(gainNode);
     gainNode.toDestination();
   }
-  // toggle noise playback
+  
+  // toggle oscillator playback
   const togglePlayback = useCallback(async () => {
     await Tone.start();
     if (isPlaying) {
-      stopNoise();
+      stopOscillator();
     } else {
-      startNoise();
+      startOscillator();
     }
-  }, [isPlaying, startNoise, stopNoise]);
+  }, [isPlaying, startOscillator, stopOscillator]);
 
   // debug state helper
   const debugState = () => {
     console.log("🔍 debug state:", {
       isPlaying,
       isInitialized,
+      frequency,
+      type,
+      bits,
+      wet,
       gain: `${gain} (linear)`,
       context: Tone.getContext().state,
-      noiseNode,
-      gainNode,
     });
   };
 
   return (
     <EffectCardLayout
-      title="white noise + bit crusher"
+      title="oscillator + bit crusher"
       isInitialized={isInitialized}
       isPlaying={isPlaying}
       onPlay={togglePlayback}
       onDebug={debugState}
     >
+      <OscillatorControls
+        frequency={frequency}
+        type={type}
+        setFrequency={setFrequency}
+        setType={setType}
+
+      />
+      
       <BitCrusherControls
         bits={bits}
         setBits={setBits}
         wet={wet}
         setWet={setWet}
       />
+      
       {/* volume control using gain */}
       <GainControl gain={gain} setGain={setGain} label="volume" />
     </EffectCardLayout>
   );
 };
 
-export default NoiseBitCrusherCard;
+export default OscBitCrusherCard;

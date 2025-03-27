@@ -16,7 +16,7 @@ export const StatusIndicators = ({
 						: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
 				}`}
 			>
-				{isInitialized ? 'Initialized' : 'Not Initialized'}
+				{isInitialized ? 'initialized' : 'not initialized'}
 			</div>
 			<div
 				className={`px-2 py-2 rounded-md text-xs ${
@@ -25,7 +25,7 @@ export const StatusIndicators = ({
 						: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
 				}`}
 			>
-				status: {isPlaying ? 'Playing' : 'Stopped'}
+				status: {isPlaying ? 'playing' : 'stopped'}
 			</div>
 		</div>
 	);
