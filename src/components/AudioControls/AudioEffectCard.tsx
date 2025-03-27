@@ -5,22 +5,16 @@ import { AudioSourceProvider, AudioSourceType } from './AudioSourceProvider'
 import { EffectCardLayout } from './EffectCardLayout'
 import { EffectChain } from './EffectChain'
 
-/**
- * Props for the AudioEffectCard component
- */
 interface AudioEffectCardProps {
-	/**
-	 * Title of the effect card
-	 */
 	title: string;
 
 	/**
-	 * Type of audio source to use
+	 * TODO: I don't like that both noise and oscillator are in the same source type. feel there's a better way to do this
 	 */
 	sourceType: AudioSourceType;
 
 	/**
-	 * Initial configuration for oscillator if using oscillator source
+	 * initial oscillator configuration
 	 */
 	oscillatorOptions?: {
 		frequency: number;
@@ -28,39 +22,35 @@ interface AudioEffectCardProps {
 	};
 
 	/**
-	 * Initial configuration for noise generator if using noise source
+	 * initial noise configuration
 	 */
 	noiseOptions?: {
 		autostart?: boolean;
-		noiseType?: import('../../worklets/NoiseProcessor.worklet').NoiseType;
 	};
 
 	/**
-	 * Array of effect nodes to include in the chain (after the source)
+	 * array of effect nodes to chain after the source
 	 */
 	effectNodes: (Tone.ToneAudioNode | null)[];
 
 	/**
-	 * Whether all effect nodes are properly initialized
+	 * boolean to indicate if the effect nodes are initialized
 	 */
 	effectsInitialized: boolean;
 
 	/**
-	 * Custom debug function to output additional state information
+	 * debug function to log the current state of the audio graph
 	 */
 	onDebug?: () => void;
 
 	/**
-	 * Child components to render (typically effect controls)
+	 * child components for additional controls or information
 	 */
 	children: ReactNode;
 }
 
 /**
- * A comprehensive card component for audio effects
- *
- * This component combines an audio source with a chain of effects,
- * providing a consistent interface for playback control and parameter adjustment.
+ * a card like component to display an audio source with various effects
  */
 export const AudioEffectCard = ({
 	title,
@@ -72,8 +62,8 @@ export const AudioEffectCard = ({
 	onDebug,
 	children,
 }: AudioEffectCardProps) => {
-	// Debug state storage
-	const [debugState, setDebugState] = useState<Record<string, any>>({});
+	// track debug state to log the current state of the audio graph
+	const [, setDebugState] = useState<Record<string, unknown>>({});
 
 	return (
 		<AudioSourceProvider
@@ -88,15 +78,15 @@ export const AudioEffectCard = ({
 				togglePlayback,
 				controlsComponent,
 			}) => {
-				// Combine source node with effect nodes
+				// combine source and effect nodes into a single array
 				const allNodes = sourceNode
 					? [sourceNode, ...effectNodes]
 					: effectNodes;
 
-				// Check if everything is initialized
+				// check initialization state of source and effect nodes
 				const isInitialized = sourceInitialized && effectsInitialized;
 
-				// Default debug function
+				// debug me
 				const handleDebug = () => {
 					const currentState = {
 						isPlaying,
@@ -107,9 +97,8 @@ export const AudioEffectCard = ({
 					};
 
 					setDebugState(currentState);
-					console.log('🔍 Debug State:', currentState);
-
-					// Call custom debug if provided
+					console.log('🔍 debug state:', currentState);
+					// call the onDebug function if provided
 					if (onDebug) onDebug();
 				};
 
@@ -125,10 +114,10 @@ export const AudioEffectCard = ({
 							onPlay={togglePlayback}
 							onDebug={handleDebug}
 						>
-							{/* Source controls */}
+							{/* source controls */}
 							{controlsComponent}
 
-							{/* Effect-specific controls */}
+							{/* effect-specific controls */}
 							{children}
 						</EffectCardLayout>
 					</EffectChain>

@@ -8,13 +8,11 @@ import { BitCrusherControls } from './AudioControls/BitCrusherControls'
 import { GainControl } from './AudioControls/GainControl'
 
 /**
- * BitCrusherCard component that provides a user interface for the bit crusher effect
- *
- * This component combines an oscillator source with a bit crusher effect and
- * volume control in a user-friendly card interface.
+ * combines an oscillator source with a bit crusher effect and
+ * volume control.
  */
 const BitCrusherCard = () => {
-	// Initialize the bitcrusher worklet
+	// initialize the bitcrusher worklet
 	const {
 		bits,
 		setBits,
@@ -24,7 +22,7 @@ const BitCrusherCard = () => {
 		isInitialized: isBitCrusherInitialized,
 	} = useBitCrusherWorklet({ bits: 4, wet: 0.75 });
 
-	// Initialize the gain node
+	// initialize the gain node
 	const {
 		gain,
 		setGain,
@@ -32,7 +30,7 @@ const BitCrusherCard = () => {
 		isInitialized: isGainInitialized,
 	} = useGain({ gain: 0.25 });
 
-	// Custom debug function to include effect-specific state
+	// debug function to include effect-specific state
 	const debugState = useCallback(() => {
 		console.log('Additional Debug Info:', {
 			bits,

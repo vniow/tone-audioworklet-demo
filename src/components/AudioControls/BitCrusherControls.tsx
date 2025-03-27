@@ -3,34 +3,32 @@ import { SliderControl } from './SliderControl'
 import { WetDryControl } from './WetDryControl'
 
 /**
- * Props for BitCrusher effect controls
+ * props
  */
 interface BitCrusherControlsProps {
 	/**
-	 * Current bit depth value
+	 * bit depth value
 	 */
 	bits: number;
 
 	/**
-	 * Function to set bit depth
+	 * set the bit depth value
 	 */
 	setBits: (value: number) => void;
 
 	/**
-	 * Current wet/dry mix value
+	 * wet/dry mix value
 	 */
 	wet: number;
 
 	/**
-	 * Function to set wet/dry mix
+	 * set the wet/dry mix value
 	 */
 	setWet: (value: number) => void;
 }
 
 /**
- * A component for controlling BitCrusher effect parameters
- *
- * Provides controls for bit depth and wet/dry mix in a standardized layout.
+ * component to render the bitcrusher controls
  */
 export const BitCrusherControls = ({
 	bits,
@@ -40,7 +38,7 @@ export const BitCrusherControls = ({
 }: BitCrusherControlsProps) => {
 	return (
 		<EffectSection title='BitCrusher Effect'>
-			{/* Bit depth control */}
+			{/* bit depth control */}
 			<SliderControl
 				label='Bit Depth'
 				value={bits}

@@ -47,8 +47,10 @@ export const delayProcessorWorklet = /* javascript */ `
        * @private
        */
       this._lastFeedback = new Array(options.outputChannelCount[0]).fill(0);
+
+      console.log('🎛️ Delay processor initialized with max delay time:', this.maxDelayTime, 'seconds');
       
-      console.log(\`Delay processor initialized with \${options.outputChannelCount[0]} channels at \${options.processorOptions.sampleRate}Hz\`);
+
     }
 
     /**

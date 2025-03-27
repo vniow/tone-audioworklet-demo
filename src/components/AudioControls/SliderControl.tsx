@@ -1,58 +1,55 @@
 import { ChangeEvent } from 'react'
 
 /**
- * Props for the SliderControl component
+ * props
  */
 interface SliderControlProps {
 	/**
-	 * Current value of the slider
+	 * current value of the slider
 	 */
 	value: number;
 
 	/**
-	 * Function called when slider value changes
+	 * callback to handle slider changes
 	 */
 	onChange: (value: number) => void;
 
 	/**
-	 * Label text displayed above the slider
+	 * label for the slider
 	 */
 	label: string;
 
 	/**
-	 * Formatted value to display (will use raw value if not provided)
+	 * formatted display value
 	 */
 	displayValue?: string;
 
 	/**
-	 * Minimum allowed value
+	 * minimum allowed value
 	 * @default 0
 	 */
 	min?: number;
 
 	/**
-	 * Maximum allowed value
+	 * maximum allowed value
 	 * @default 1
 	 */
 	max?: number;
 
 	/**
-	 * Step size for increments
+	 * step size for increments
 	 * @default 0.01
 	 */
 	step?: number;
 
 	/**
-	 * Additional CSS classes
+	 * additional CSS classes
 	 */
 	className?: string;
 }
 
 /**
- * A reusable slider control component with standardized styling
- *
- * This component provides a consistent slider UI across the application
- * with configurable ranges and formatting.
+ * component to render a slider control
  */
 export const SliderControl = ({
 	value,
@@ -64,7 +61,7 @@ export const SliderControl = ({
 	step = 0.01,
 	className = '',
 }: SliderControlProps) => {
-	// Handle slider change
+	// handle slider change
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		onChange(Number(e.target.value));
 	};
@@ -75,7 +72,7 @@ export const SliderControl = ({
 				{label}: {displayValue ?? value}
 			</label>
 
-			{/* The slider input with dark mode support */}
+			{/* slider input with dark mode support */}
 			<input
 				type='range'
 				value={value}
@@ -88,7 +85,7 @@ export const SliderControl = ({
 					h-4
 					bg-gray-300
 					dark:bg-gray-600
-					rounded-sm
+					rounded-lg
 					appearance-none
 					cursor-pointer
 					outline-offset-1

@@ -27,7 +27,9 @@ export interface OscillatorHookResult {
  * @param options - Configuration options for the oscillator
  * @returns The oscillator control interface
  */
-export const useOscillator = (options: OscillatorOptions = {}): OscillatorHookResult => {
+export const useOscillator = (
+	options: OscillatorOptions = {}
+): OscillatorHookResult => {
 	// Default values
 	const defaultFrequency = 440;
 	const defaultType: Tone.ToneOscillatorType = 'sine';
@@ -38,7 +40,9 @@ export const useOscillator = (options: OscillatorOptions = {}): OscillatorHookRe
 	const [frequency, setFrequencyState] = useState(
 		options.frequency !== undefined ? options.frequency : defaultFrequency
 	);
-	const [type, setTypeState] = useState<Tone.ToneOscillatorType>(options.type || defaultType);
+	const [type, setTypeState] = useState<Tone.ToneOscillatorType>(
+		options.type || defaultType
+	);
 
 	// Ref for the oscillator node
 	const oscillatorRef = useRef<Tone.Oscillator | null>(null);

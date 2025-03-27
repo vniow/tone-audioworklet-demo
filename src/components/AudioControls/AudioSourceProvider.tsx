@@ -6,24 +6,25 @@ import { useOscillator } from '../../hooks/useOscillator'
 import { OscillatorControls } from './OscillatorControls'
 
 /**
- * Types of audio sources supported
+ * TODO: I don't like that both noise and oscillator are in the same source type. feel there's a better way to do this. how does Tone do it anyway
  */
+
 export enum AudioSourceType {
 	OSCILLATOR = 'oscillator',
 	NOISE = 'noise',
 }
 
 /**
- * Props for the AudioSourceProvider component
+ * props
  */
 interface AudioSourceProviderProps {
 	/**
-	 * Type of audio source to use
+	 * audio source type. see this doesn't seem right to me. ok so Tone does have a whole source class. can i extend it? is that necessary?
 	 */
 	sourceType: AudioSourceType;
 
 	/**
-	 * Initial parameters for the oscillator (when sourceType is OSCILLATOR)
+	 * set the initial parameters for the oscillator
 	 */
 	oscillatorOptions?: {
 		frequency: number;
@@ -31,7 +32,7 @@ interface AudioSourceProviderProps {
 	};
 
 	/**
-	 * Initial parameters for the noise generator (when sourceType is NOISE)
+	 * set the initial parameters for the noise generator
 	 */
 	noiseOptions?: {
 		autostart?: boolean;
@@ -39,7 +40,7 @@ interface AudioSourceProviderProps {
 	};
 
 	/**
-	 * Render prop function that receives source controls and state
+	 * render prop to return the children with the current state of the audio source
 	 */
 	children: (props: {
 		sourceNode: Tone.ToneAudioNode | null;
@@ -51,10 +52,7 @@ interface AudioSourceProviderProps {
 }
 
 /**
- * Component that provides a unified interface for different audio sources
- *
- * This component abstracts the differences between various audio sources (oscillator, noise)
- * and provides a consistent interface for controlling them.
+ * AudioSourceProvider component to manage audio source state and provide controls
  */
 export const AudioSourceProvider = ({
 	sourceType,
@@ -75,7 +73,7 @@ export const AudioSourceProvider = ({
 		isInitialized: isOscInitialized,
 	} = useOscillator(oscillatorOptions);
 
-	// Initialize noise generator if needed
+	// init noise if needed
 	const {
 		noiseNode,
 		isPlaying: isNoisePlaying,
@@ -84,7 +82,7 @@ export const AudioSourceProvider = ({
 		isInitialized: isNoiseInitialized,
 	} = useNoiseWorklet(noiseOptions);
 
-	// Determine which source is active based on sourceType
+	// what source are we using
 	const sourceNode =
 		sourceType === AudioSourceType.OSCILLATOR ? oscillator : noiseNode;
 	const isPlaying =
@@ -94,7 +92,7 @@ export const AudioSourceProvider = ({
 			? isOscInitialized
 			: isNoiseInitialized;
 
-	// Toggle playback for the active source
+	// toggle playback function to start or stop the audio source
 	const togglePlayback = async () => {
 		await Tone.start();
 
@@ -113,7 +111,7 @@ export const AudioSourceProvider = ({
 		}
 	};
 
-	// Render the appropriate controls for the selected source type
+	// render appropriate controls based on source type
 	const controlsComponent =
 		sourceType === AudioSourceType.OSCILLATOR ? (
 			<OscillatorControls
@@ -124,7 +122,7 @@ export const AudioSourceProvider = ({
 			/>
 		) : null;
 
-	// Use the render prop pattern to pass all necessary data to children
+	//
 	return (
 		<>
 			{children({

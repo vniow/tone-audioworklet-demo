@@ -4,7 +4,6 @@
 
 - AudioWorklet: Web API for audio processing
 - Tone.js: Framework for audio synthesis
-- BitCrusher: Effect that reduces bit depth of audio
 
 ## Component Relations
 

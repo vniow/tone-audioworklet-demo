@@ -8,13 +8,10 @@ import { EffectCardLayout } from './AudioControls/EffectCardLayout'
 import { GainControl } from './AudioControls/GainControl'
 
 /**
- * NoiseCard component that provides a user interface for the white noise generator
- *
- * This component wraps the white noise generator worklet in a user-friendly card
- * with a volume control via GainNode.
+ * component wraps the white noise generator worklet with a volume control
  */
 const NoiseCard = () => {
-	// Initialize the white noise generator worklet
+	// initialize the white noise generator worklet
 	const {
 		startNoise,
 		stopNoise,
@@ -23,7 +20,7 @@ const NoiseCard = () => {
 		isPlaying,
 	} = useNoiseWorklet();
 
-	// Initialize the gain node for volume control
+	// initialize the gain node for volume control
 	const {
 		gain,
 		setGain,
@@ -31,13 +28,13 @@ const NoiseCard = () => {
 		isInitialized: isGainInitialized,
 	} = useGain({ gain: 0.25 });
 
-	// Overall initialization state
+	// overall initialization state
 	const isInitialized = isNoiseInitialized && isGainInitialized;
 
-	// Use our hook to handle audio connections
+	// use our hook to handle audio connections
 	useAudioNodeConnections([noiseNode, gainNode], isInitialized);
 
-	// Toggle noise playback
+	// toggle noise playback
 	const togglePlayback = useCallback(async () => {
 		await Tone.start();
 		if (isPlaying) {
@@ -47,7 +44,7 @@ const NoiseCard = () => {
 		}
 	}, [isPlaying, startNoise, stopNoise]);
 
-	// Debug state helper
+	// debug state helper
 	const debugState = () => {
 		console.log('🔍 Debug State:', {
 			isPlaying,
@@ -67,7 +64,7 @@ const NoiseCard = () => {
 			onPlay={togglePlayback}
 			onDebug={debugState}
 		>
-			{/* Volume control using Gain */}
+			{/* volume control using gain */}
 			<GainControl
 				gain={gain}
 				setGain={setGain}

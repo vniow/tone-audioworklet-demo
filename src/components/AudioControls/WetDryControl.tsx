@@ -1,32 +1,29 @@
 import { SliderControl } from './SliderControl'
 
 /**
- * Props for the WetDryControl component
+ * props
  */
 interface WetDryControlProps {
 	/**
-	 * Current wet/dry mix value (0-1)
+	 * current wet/dry mix value (0-1)
 	 * 0 = fully dry, 1 = fully wet
 	 */
 	wet: number;
 
 	/**
-	 * Function to set wet/dry mix value
+	 * set wet/dry mix value
 	 */
 	setWet: (value: number) => void;
 
 	/**
-	 * Optional label override
+	 * optional label override
 	 * @default "Effect Mix"
 	 */
 	label?: string;
 }
 
 /**
- * A specialized control for managing wet/dry mix of audio effects
- *
- * This component provides a slider for controlling the balance between
- * processed (wet) and unprocessed (dry) signals with appropriate labeling.
+ * component to render a wet/dry mix control slider
  */
 export const WetDryControl = ({
 	wet,
@@ -44,7 +41,7 @@ export const WetDryControl = ({
 				max={1}
 				step={0.01}
 			/>
-			<div className='flex justify-between text-xs text-gray-500 -mt-2'>
+			<div className='flex justify-between text-xs text-gray-700 dark:text-gray-300 -mt-2'>
 				<span>Dry</span>
 				<span>Wet</span>
 			</div>

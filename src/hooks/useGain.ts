@@ -1,51 +1,53 @@
 import { useEffect, useRef, useState } from 'react'
 import * as Tone from 'tone'
 
-// Options interface for the gain hook
+// options interface for the gain hook
 export interface GainOptions {
-	gain?: number; // 0-1 range
+	gain?: Tone.Unit.NormalRange; // 0-1 range
 }
 
-// Return type for the hook
+// return type for the hook
 export interface GainHookResult {
-	gain: number;
-	setGain: (value: number) => void;
+	gain: Tone.Unit.NormalRange;
+	setGain: (value: Tone.Unit.NormalRange) => void;
 	gainNode: Tone.Gain | null;
 	isInitialized: boolean;
 }
 
 /**
- * A hook to create and manage a Tone.js gain node
+ * hook to create and manage a Tone.js gain node
  *
- * @param options - Configuration options for the gain node
- * @returns The gain node control interface
+ * @param options - config options for the gain node
+ * @returns gain node control interface
  */
 export const useGain = (options: GainOptions = {}): GainHookResult => {
-	// Default values
+	// default values
 	const defaultGain = 0.25;
 
-	// State for UI and external tracking
-	const [gain, setGainState] = useState(options.gain !== undefined ? options.gain : defaultGain);
+	// state for UI and external tracking
+	const [gain, setGainState] = useState(
+		options.gain !== undefined ? options.gain : defaultGain
+	);
 	const [isInitialized, setIsInitialized] = useState(false);
 
-	// Refs to prevent recreation of nodes
+	// refs to prevent recreation of nodes
 	const gainNodeRef = useRef<Tone.Gain | null>(null);
 	const gainValueRef = useRef(gain);
 
-	// Create gain node ONCE on mount
+	// create gain node once on mount
 	useEffect(() => {
 		console.log('🎛️ Initializing gain node...');
 
-		// Create a gain node that outputs to the main destination
+		// create a gain node
 		const newGainNode = new Tone.Gain(gainValueRef.current);
 
-		// Store reference
+		// store reference
 		gainNodeRef.current = newGainNode;
 		setIsInitialized(true);
 
 		console.log('✅ Gain node initialized with value:', gainValueRef.current);
 
-		// Cleanup on unmount
+		// cleanup on unmount
 		return () => {
 			console.log('🧹 Cleaning up gain node');
 			if (gainNodeRef.current) {
@@ -54,27 +56,33 @@ export const useGain = (options: GainOptions = {}): GainHookResult => {
 				gainNodeRef.current = null;
 			}
 		};
-	}, []); // Empty dependency array - only run once on mount
+	}, []); // empty dependency array - only run once on mount
 
-	// Custom setGain function that updates both state and node directly
-	const setGain = (newGain: number) => {
-		// Update ref
+	// custom setGain function that updates both state and node directly
+	const setGain = (newGain: Tone.Unit.NormalRange) => {
+		// update ref
 		gainValueRef.current = newGain;
-
-		// Update UI state
-		setGainState(newGain);
-
-		// Update actual node parameter directly if it exists
+		const gainValueRampTo = 0.05;
 		if (gainNodeRef.current) {
-			gainNodeRef.current.gain.value = newGain;
-			console.log(`🔊 Updated gain value: ${newGain}`);
+			if (typeof gainNodeRef.current.gain.rampTo === 'function') {
+				gainNodeRef.current.gain.rampTo(newGain, gainValueRampTo);
+				console.log(
+					`🔊 ramped to gain value: ${newGain} over ${gainValueRampTo} seconds`
+				);
+			} else {
+				gainNodeRef.current.gain.value = newGain;
+				console.log(`🔊 set gain value: ${newGain}`);
+			}
 		}
+
+		// update UI state
+		setGainState(newGain);
 	};
 
 	return {
+		gainNode: gainNodeRef.current,
 		gain,
 		setGain,
-		gainNode: gainNodeRef.current,
 		isInitialized,
 	};
 };

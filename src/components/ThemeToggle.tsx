@@ -4,17 +4,17 @@ export function ThemeToggle() {
 	const [isDark, setIsDark] = useState(false);
 
 	useEffect(() => {
-		// Set initial state based on data-theme attribute
+		// set initial state based on data-theme attribute
 		setIsDark(document.documentElement.getAttribute('data-theme') === 'dark');
 	}, []);
 
 	const toggleTheme = () => {
 		if (isDark) {
-			// Switch to light theme
+			// switch to light theme
 			document.documentElement.removeAttribute('data-theme');
 			localStorage.theme = 'light';
 		} else {
-			// Switch to dark theme
+			// switch to dark theme
 			document.documentElement.setAttribute('data-theme', 'dark');
 			localStorage.theme = 'dark';
 		}

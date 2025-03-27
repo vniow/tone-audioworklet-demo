@@ -3,21 +3,21 @@ import * as Tone from 'tone'
 
 import { ToneWorkletBase, ToneWorkletBaseOptions } from '../lib/ToneWorkletBase'
 
-// Define base types for nodes that can be connected
+// define base types for nodes that can be connected
 type BaseConnectableNode =
 	| Tone.ToneAudioNode
 	| ToneWorkletBase<ToneWorkletBaseOptions>
 	| AudioNode;
 type ConnectableNode = BaseConnectableNode | null;
 
-// Type guard to check if node has toDestination method
+// type guard to check if node has toDestination method
 function hasToDestination(
 	node: ConnectableNode
 ): node is Tone.ToneAudioNode | ToneWorkletBase<ToneWorkletBaseOptions> {
 	return node !== null && 'toDestination' in node;
 }
 
-// Type guard for ToneAudioNode or ToneWorkletBase
+// type guard for ToneAudioNode or ToneWorkletBase
 function isToneNode(
 	node: BaseConnectableNode
 ): node is Tone.ToneAudioNode | ToneWorkletBase<ToneWorkletBaseOptions> {
@@ -31,24 +31,25 @@ export const useAudioNodeConnections = (
 	const nodesConnectedRef = useRef(false);
 
 	useEffect(() => {
-		// Check if all nodes exist and are initialized
+		// check if all nodes exist and are initialized
 		const allNodesReady = nodes.every((node) => node !== null) && isInitialized;
 
 		if (allNodesReady && !nodesConnectedRef.current) {
 			console.log('🔌 Connecting audio nodes...');
 
-			// Disconnect any existing connections first
+			// disconnect any existing connections first
 			nodes.forEach((node) => {
 				if (node) {
 					if (node instanceof AudioNode) {
 						node.disconnect();
+						console.log('🔌 disconnecting AudioNode');
 					} else {
 						node.disconnect();
 					}
 				}
 			});
 
-			// Connect nodes in sequence
+			// connect nodes in sequence
 			for (let i = 0; i < nodes.length - 1; i++) {
 				const currentNode = nodes[i];
 				const nextNode = nodes[i + 1];
@@ -60,11 +61,12 @@ export const useAudioNodeConnections = (
 					} else {
 						// Web Audio API node
 						currentNode.connect(nextNode as AudioNode);
+						console.log('🔌 connecting AudioNode');
 					}
 				}
 			}
 
-			// Connect last node to destination
+			// connect last node to destination
 			const lastNode = nodes[nodes.length - 1];
 			if (lastNode && hasToDestination(lastNode)) {
 				lastNode.toDestination();
@@ -73,13 +75,14 @@ export const useAudioNodeConnections = (
 			nodesConnectedRef.current = true;
 		}
 
-		// Cleanup function
+		// cleanup function
 		return () => {
 			if (nodesConnectedRef.current) {
-				console.log('🧹 Cleaning up audio connections');
+				console.log('🧹 cleaning up audio connections');
 				nodes.forEach((node) => {
 					if (node) {
 						if (node instanceof AudioNode) {
+							console.log('🔌 disconnecting AudioNode');
 							node.disconnect();
 						} else {
 							node.disconnect();
@@ -89,7 +92,7 @@ export const useAudioNodeConnections = (
 				nodesConnectedRef.current = false;
 			}
 		};
-	}, [nodes, isInitialized]);
+	}, [nodes]);
 
 	return nodesConnectedRef.current;
 };

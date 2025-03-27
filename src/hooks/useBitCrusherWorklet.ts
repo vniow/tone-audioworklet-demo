@@ -5,13 +5,13 @@ import { BitCrusherNode } from '../lib/BitCrusherNode'
 import { getWorkletGlobalScope } from '../lib/WorkletGlobalScope'
 import { workletName } from '../worklets/BitCrusher.worklet'
 
-// Options interface for the bit crusher hook
+// options interface for the bit crusher hook
 export interface BitCrusherOptions {
 	bits?: number; // 1-16 range
 	wet?: number; // 0-1 range
 }
 
-// Return type for the hook
+// return type for the hook
 export interface BitCrusherHookResult {
 	bitCrusherNode: BitCrusherNode | null;
 	isInitialized: boolean;
@@ -22,19 +22,19 @@ export interface BitCrusherHookResult {
 }
 
 /**
- * A hook to create and manage a Tone.js BitCrusherNode worklet
+ * hook to create and manage a custom bit crusher worklet
  *
- * @param options - Configuration options for the bit crusher node
- * @returns The bit crusher control interface
+ * @param options - config options for the bit crusher node
+ * @returns bit crusher control interface
  */
 export const useBitCrusherWorklet = (
 	options: BitCrusherOptions = {}
 ): BitCrusherHookResult => {
-	// Default values
+	// default values
 	const defaultBits = 4;
-	const defaultWet = 1; // fully wet by default
+	const defaultWet = 1; // fully moist by default
 
-	// State for UI and external tracking
+	// state for UI and external tracking
 	const [bits, setBitsState] = useState(
 		options.bits !== undefined ? options.bits : defaultBits
 	);
@@ -43,26 +43,26 @@ export const useBitCrusherWorklet = (
 	);
 	const [isInitialized, setIsInitialized] = useState(false);
 
-	// Refs to prevent recreation of nodes
+	// refs to prevent recreation of nodes
 	const bitCrusherNodeRef = useRef<BitCrusherNode | null>(null);
 	// ref to track the current bits value
 	const bitsRef = useRef(bits);
-	// Ref to track the current wet value for smoothing
+	// ref to track the current wet value for smoothing
 	const wetRef = useRef(wet);
 
-	// Create bit crusher node ONCE on mount
+	// create bit crusher node once on mount
 	useEffect(() => {
-		// Skip if already initialized
+		// skip if already initialized
 		if (isInitialized) return;
 
 		console.log('🎛️ Initializing BitCrusher worklet...');
 
 		const setupBitCrusher = async () => {
 			try {
-				// Initialize audio worklets
+				// initialize audio worklets
 				await Tone.start();
 
-				// Register worklets
+				// register worklets
 				const audioWorkletBlob = new Blob([getWorkletGlobalScope()], {
 					type: 'text/javascript',
 				});
@@ -70,21 +70,21 @@ export const useBitCrusherWorklet = (
 
 				try {
 					await Tone.getContext().addAudioWorkletModule(workletUrl);
-					console.log(`Successfully registered audio worklets: ${workletName}`);
+					console.log(`successfully registered audio worklets: ${workletName}`);
 				} catch (error) {
-					console.error('Failed to register audio worklets:', error);
+					console.error('failed to register audio worklets:', error);
 					throw error;
 				} finally {
 					URL.revokeObjectURL(workletUrl);
 				}
 
-				// Create a bit crusher node
+				// create a bit crusher node
 				const newBitCrusherNode = new BitCrusherNode({
 					bits: bitsRef.current,
 					wet: wetRef.current,
 				});
 
-				// Store reference
+				// store reference
 				bitCrusherNodeRef.current = newBitCrusherNode;
 				setIsInitialized(true);
 
@@ -101,9 +101,9 @@ export const useBitCrusherWorklet = (
 
 		setupBitCrusher();
 
-		// Cleanup on unmount
+		// cleanup on unmount
 		return () => {
-			console.log('🧹 Cleaning up BitCrusher node');
+			console.log('🧹 cleaning up BitCrusher node');
 			if (bitCrusherNodeRef.current) {
 				bitCrusherNodeRef.current.disconnect();
 				bitCrusherNodeRef.current.dispose();
@@ -112,7 +112,7 @@ export const useBitCrusherWorklet = (
 		};
 	}, []);
 
-	// Function to set bits value
+	// function to set bits value
 	const setBits = (newBits: number) => {
 		setBitsState(newBits);
 		bitsRef.current = newBits;
@@ -127,14 +127,14 @@ export const useBitCrusherWorklet = (
 		}
 	};
 
-	// Function to set wet/dry mix with smoothing
+	// function to set wet/dry mix with smoothing
 	const setWet = (newWet: number) => {
 		setWetState(newWet);
 		wetRef.current = newWet;
 
 		if (bitCrusherNodeRef.current) {
 			bitCrusherNodeRef.current.wet = newWet;
-			console.log(`🔊 Updated wet value: ${newWet}`);
+			console.log(`🔊 updated wet value: ${newWet}`);
 		}
 	};
 

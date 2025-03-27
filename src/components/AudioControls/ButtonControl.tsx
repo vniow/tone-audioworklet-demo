@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
 /**
- * Button variant types for different visual styles
+ * variant of button to use
  */
 export enum ButtonVariant {
 	PRIMARY = 'primary',
@@ -12,48 +12,41 @@ export enum ButtonVariant {
 }
 
 /**
- * Props for the ButtonControl component
+ * props
  */
 interface ButtonControlProps {
 	/**
-	 * Button click handler
+	 * click handler function
 	 */
 	onClick: () => void;
 
 	/**
-	 * Button label or content
+	 * what goes in the button
 	 */
 	children: ReactNode;
 
 	/**
-	 * Visual style variant
+	 * what variant of button to use
 	 * @default ButtonVariant.PRIMARY
 	 */
 	variant?: ButtonVariant;
 
 	/**
-	 * Whether the button should take full width
+	 * should the button take full width of its container
 	 * @default true
 	 */
 	fullWidth?: boolean;
-
-	/**
-	 * Additional CSS classes
-	 */
 	className?: string;
 
 	/**
-	 * Whether the button is disabled
+	 * disabled by default
 	 * @default false
 	 */
 	disabled?: boolean;
 }
 
 /**
- * A reusable button component with standardized styling
- *
- * This component provides consistent button styles across the application
- * with configurable variants for different actions.
+ * reusable button component with standardized styling
  */
 export const ButtonControl = ({
 	onClick,
@@ -63,7 +56,7 @@ export const ButtonControl = ({
 	className = '',
 	disabled = false,
 }: ButtonControlProps) => {
-	// Map variants to TailwindCSS classes with dark mode support
+	// map variants to TailwindCSS classes with dark mode support
 	const variantStyles = {
 		[ButtonVariant.PRIMARY]:
 			'bg-blue-500 hover:bg-blue-600 text-white dark:bg-blue-600 dark:hover:bg-blue-700',

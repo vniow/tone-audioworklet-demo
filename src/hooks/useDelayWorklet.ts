@@ -23,10 +23,10 @@ export interface DelayHookResult {
 }
 
 /**
- * A hook to create and manage a Tone.js DelayNode worklet
+ * hook to create and manage a custom delay worklet
  *
- * @param options - Configuration options for the delay node
- * @returns The delay control interface
+ * @param options - config options for the delay node
+ * @returns delay control interface
  */
 export const useDelayWorklet = (
 	options: DelayOptions = {}
@@ -34,9 +34,9 @@ export const useDelayWorklet = (
 	// Default values
 	const defaultDelayTime = 0.5; // default delay time in seconds
 	const defaultFeedback = 0.5; // default feedback level
-	const defaultWet = 1; // fully wet by default
+	const defaultWet = 1; // fully moist by default
 
-	// State for UI and external tracking
+	// state for UI and external tracking
 	const [delayTime, setDelayTimeState] = useState(
 		options.delayTime !== undefined ? options.delayTime : defaultDelayTime
 	);
@@ -48,24 +48,24 @@ export const useDelayWorklet = (
 	);
 	const [isInitialized, setIsInitialized] = useState(false);
 
-	// Refs to prevent recreation of nodes
+	// refs to prevent recreation of nodes
 	const delayNodeRef = useRef<DelayNode | null>(null);
 	const delayTimeRef = useRef(delayTime);
 	const feedbackRef = useRef(feedback);
 	const wetRef = useRef(wet);
-	const mountedRef = useRef(true); // Track if component is mounted
+	const mountedRef = useRef(true); // track if component is mounted
 
-	// Create delay node ONCE on mount
+	// create delay node once on mount
 	useEffect(() => {
 		mountedRef.current = true;
 		console.log('🎛️ Initializing Delay worklet...');
 
 		const setupDelayWorklet = async () => {
 			try {
-				// Initialize audio worklets
+				// initialize audio worklets
 				await Tone.start();
 
-				// Register worklets
+				// register worklets
 				const audioWorkletBlob = new Blob([getWorkletGlobalScope()], {
 					type: 'text/javascript',
 				});
@@ -83,17 +83,17 @@ export const useDelayWorklet = (
 					URL.revokeObjectURL(workletUrl);
 				}
 
-				// Only continue if component is still mounted
+				// only continue if component is still mounted
 				if (!mountedRef.current) return;
 
-				// Create a delay node
+				// create a delay node
 				const newDelayNode = new DelayNode({
 					delayTime: delayTimeRef.current,
 					feedback: feedbackRef.current,
 					wet: wetRef.current,
 				});
 
-				// Store reference
+				// store reference
 				delayNodeRef.current = newDelayNode;
 				setIsInitialized(true);
 
@@ -115,7 +115,7 @@ export const useDelayWorklet = (
 
 		setupDelayWorklet();
 
-		// Cleanup on unmount
+		// cleanup on unmount
 		return () => {
 			console.log('🧹 Cleaning up Delay node');
 			mountedRef.current = false;
@@ -126,9 +126,9 @@ export const useDelayWorklet = (
 				setIsInitialized(false);
 			}
 		};
-	}, []); // Empty dependency array - only run once on mount
+	}, []); // empty dependency array - only run once on mount
 
-	// Function to set delay time with smoothing
+	// function to set delay time with smoothing
 	const setDelayTime = (newDelayTime: number) => {
 		setDelayTimeState(newDelayTime);
 		delayTimeRef.current = newDelayTime;
@@ -143,7 +143,7 @@ export const useDelayWorklet = (
 		}
 	};
 
-	// Function to set feedback with smoothing
+	// function to set feedback with smoothing
 	const setFeedback = (newFeedback: number) => {
 		setFeedbackState(newFeedback);
 		feedbackRef.current = newFeedback;
@@ -158,7 +158,7 @@ export const useDelayWorklet = (
 		}
 	};
 
-	// Function to set wet/dry mix with smoothing
+	// function to set wet/dry mix with smoothing
 	const setWet = (newWet: number) => {
 		setWetState(newWet);
 		wetRef.current = newWet;

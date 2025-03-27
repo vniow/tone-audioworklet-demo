@@ -4,45 +4,43 @@ import { ButtonControl, ButtonVariant } from './ButtonControl'
 import { StatusIndicators } from './StatusIndicators'
 
 /**
- * Props for the EffectCardLayout component
+ * props for the EffectCardLayout component
  */
 interface EffectCardLayoutProps {
 	/**
-	 * Title of the effect card
+	 * title of the card
 	 */
 	title: string;
 
 	/**
-	 * Whether the audio nodes are initialized
+	 * are those audio nodes initialized
 	 */
 	isInitialized: boolean;
 
 	/**
-	 * Whether the audio is playing
+	 * is the audio playing
 	 */
 	isPlaying: boolean;
 
 	/**
-	 * Function to toggle playback on/off
+	 * playback on/off
 	 */
 	onPlay: () => void;
 
 	/**
-	 * Function to trigger debugging output
+	 * trigger debug state
 	 */
 	onDebug: () => void;
 
 	/**
-	 * Child components to render within the card
+	 * what goes inside the card
 	 */
 	children: ReactNode;
 }
 
 /**
- * A standardized layout component for audio effect panels
- *
- * This component provides a consistent card layout with title,
- * status indicators, play/stop controls, and debug functionality.
+ * this component provides a card layout with title,
+ * status indicators, play/stop controls, and debug functionality
  */
 export const EffectCardLayout = ({
 	title,
@@ -66,7 +64,7 @@ export const EffectCardLayout = ({
 					isPlaying={isPlaying}
 				/>
 
-				{/* Play/Stop button */}
+				{/* play/stop button */}
 				<ButtonControl
 					onClick={onPlay}
 					variant={isPlaying ? ButtonVariant.DANGER : ButtonVariant.SUCCESS}
@@ -74,12 +72,12 @@ export const EffectCardLayout = ({
 					{isPlaying ? 'Stop' : 'Play'}
 				</ButtonControl>
 
-				{/* Debug button */}
+				{/* debug button */}
 				<ButtonControl
 					onClick={onDebug}
 					variant={ButtonVariant.INFO}
 				>
-					Debug State
+					debug state
 				</ButtonControl>
 
 				{children}

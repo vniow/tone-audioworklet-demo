@@ -8,13 +8,16 @@ import { AudioSourceType } from './AudioControls/AudioSourceProvider'
 import { BitCrusherControls } from './AudioControls/BitCrusherControls'
 import { DelayControls } from './AudioControls/DelayControls'
 import { GainControl } from './AudioControls/GainControl'
+import NoiseCard from './NoiseCard'
 
 /**
- * component chains an oscillator through both BitCrusher and Delay effects
+ * BitCrusherDelayCard component that provides a user interface for a combined effect chain
+ *
+ * This component chains an oscillator through both BitCrusher and Delay effects
  * with independent controls for each effect in the chain.
  */
 const BitCrusherDelayCard = () => {
-	// initialize the delay worklet
+	// Initialize the delay worklet
 	const {
 		delayTime,
 		setDelayTime,
@@ -30,7 +33,7 @@ const BitCrusherDelayCard = () => {
 		wet: 0.75,
 	});
 
-	// initialize the gain node
+	// Initialize the gain node
 	const {
 		gain,
 		setGain,
@@ -38,7 +41,7 @@ const BitCrusherDelayCard = () => {
 		isInitialized: isGainInitialized,
 	} = useGain({ gain: 0.25 });
 
-	// initialize the bitcrusher worklet
+	// Initialize the bitcrusher worklet
 	const {
 		bits,
 		setBits,
@@ -51,7 +54,7 @@ const BitCrusherDelayCard = () => {
 		wet: 0.75,
 	});
 
-	// debug function to include effect-specific state
+	// Custom debug function to include effect-specific state
 	const debugState = useCallback(() => {
 		console.log('Additional Debug Info:', {
 			delayTime,

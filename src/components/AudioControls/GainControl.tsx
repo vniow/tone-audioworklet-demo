@@ -1,31 +1,28 @@
 import { SliderControl } from './SliderControl'
 
 /**
- * Props for the GainControl component
+ * props
  */
 interface GainControlProps {
 	/**
-	 * Current gain value (0-1)
+	 * current gain value (0-1)
 	 */
 	gain: number;
 
 	/**
-	 * Function to set gain value
+	 * set the gain value (0-1)
 	 */
 	setGain: (value: number) => void;
 
 	/**
-	 * Optional label override
-	 * @default "Volume"
+	 * optional label override
+	 * @default "volume"
 	 */
 	label?: string;
 }
 
 /**
- * A specialized control for managing audio gain (volume)
- *
- * This component provides a slider for controlling audio gain level
- * with percentage display formatting.
+ * component to render a gain control slider
  */
 export const GainControl = ({
 	gain,

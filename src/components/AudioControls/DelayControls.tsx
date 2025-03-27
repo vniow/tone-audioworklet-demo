@@ -3,44 +3,42 @@ import { SliderControl } from './SliderControl'
 import { WetDryControl } from './WetDryControl'
 
 /**
- * Props for Delay effect controls
+ * props for Delay effect controls
  */
 interface DelayControlsProps {
 	/**
-	 * Current delay time in seconds
+	 * delay time in seconds
 	 */
 	delayTime: number;
 
 	/**
-	 * Function to set delay time
+	 * set the delay time in seconds
 	 */
 	setDelayTime: (value: number) => void;
 
 	/**
-	 * Current feedback amount (0-1)
+	 * feedback amount (0-1)
 	 */
 	feedback: number;
 
 	/**
-	 * Function to set feedback amount
+	 * set the feedback amount (0-1)
 	 */
 	setFeedback: (value: number) => void;
 
 	/**
-	 * Current wet/dry mix value
+	 * wet/dry mix value (0-1)
 	 */
 	wet: number;
 
 	/**
-	 * Function to set wet/dry mix
+	 * set the wet/dry mix value
 	 */
 	setWet: (value: number) => void;
 }
 
 /**
- * A component for controlling Delay effect parameters
- *
- * Provides controls for delay time, feedback and wet/dry mix in a standardized layout.
+ * component to render the delay effect controls
  */
 export const DelayControls = ({
 	delayTime,
@@ -52,7 +50,7 @@ export const DelayControls = ({
 }: DelayControlsProps) => {
 	return (
 		<EffectSection title='Delay Effect'>
-			{/* Delay Time control */}
+			{/* delay time control */}
 			<SliderControl
 				label='Delay Time'
 				value={delayTime}
@@ -63,7 +61,7 @@ export const DelayControls = ({
 				step={0.01}
 			/>
 
-			{/* Feedback control */}
+			{/* feedback control */}
 			<SliderControl
 				label='Feedback'
 				value={feedback}

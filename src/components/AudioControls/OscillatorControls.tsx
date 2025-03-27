@@ -17,7 +17,7 @@ export const OscillatorControls = ({
 }: OscillatorControlsProps) => {
 	return (
 		<>
-			{/* Frequency control */}
+			{/* frequency control */}
 			<SliderControl
 				label='Oscillator frequency'
 				value={frequency}
@@ -28,18 +28,18 @@ export const OscillatorControls = ({
 				step={1}
 			/>
 
-			{/* Waveform type selector with icons */}
-			<div>
-				<label className='block text-xs font-medium text-gray-700 mb-1'>
-					Oscillator Type
+			{/* waveform type selector with icons */}
+			<div className='position-relative'>
+				<label className='block text-xs font-medium dark:text-gray-300 text-gray-700 mb-2'>
+					oscillator type
 				</label>
-				<div className='flex space-x-2'>
-					{/* Sine wave */}
+				<div className='flex space-x-2 justify-center items-center'>
+					{/* sine wave */}
 					<button
 						onClick={() => setType('sine')}
 						className={`p-2 border rounded-md w-16 h-16 flex items-center justify-center ${
 							type === 'sine'
-								? 'bg-indigo-100 border-indigo-500'
+								? 'bg-indigo-300 border-indigo-500'
 								: 'border-gray-300'
 						}`}
 						title='Sine wave'
@@ -57,12 +57,12 @@ export const OscillatorControls = ({
 						</svg>
 					</button>
 
-					{/* Square wave */}
+					{/* square wave */}
 					<button
 						onClick={() => setType('square')}
 						className={`p-2 border rounded-md w-16 h-16 flex items-center justify-center ${
 							type === 'square'
-								? 'bg-indigo-100 border-indigo-500'
+								? 'bg-indigo-300 border-indigo-500'
 								: 'border-gray-300'
 						}`}
 						title='Square wave'
@@ -80,12 +80,12 @@ export const OscillatorControls = ({
 						</svg>
 					</button>
 
-					{/* Sawtooth wave */}
+					{/* sawtooth wave */}
 					<button
 						onClick={() => setType('sawtooth')}
 						className={`p-2 border rounded-md w-16 h-16 flex items-center justify-center ${
 							type === 'sawtooth'
-								? 'bg-indigo-100 border-indigo-500'
+								? 'bg-indigo-300 border-indigo-500'
 								: 'border-gray-300'
 						}`}
 						title='Sawtooth wave'
@@ -103,12 +103,12 @@ export const OscillatorControls = ({
 						</svg>
 					</button>
 
-					{/* Triangle wave */}
+					{/* triangle wave */}
 					<button
 						onClick={() => setType('triangle')}
 						className={`p-2 border rounded-md w-16 h-16 flex items-center justify-center ${
 							type === 'triangle'
-								? 'bg-indigo-100 border-indigo-500'
+								? 'bg-indigo-300 border-indigo-500'
 								: 'border-gray-300'
 						}`}
 						title='Triangle wave'

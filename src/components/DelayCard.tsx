@@ -8,13 +8,11 @@ import { DelayControls } from './AudioControls/DelayControls'
 import { GainControl } from './AudioControls/GainControl'
 
 /**
- * DelayCard component that provides a user interface for the delay effect
- *
- * This component combines an oscillator source with a delay effect and
- * volume control in a user-friendly card interface.
+ * component combines an oscillator source with a delay effect and
+ * volume control
  */
 const DelayCard = () => {
-	// Initialize the delay worklet
+	// initialize the delay worklet
 	const {
 		delayTime,
 		setDelayTime,
@@ -30,7 +28,7 @@ const DelayCard = () => {
 		wet: 0.75,
 	});
 
-	// Initialize the gain node
+	// initialize the gain node
 	const {
 		gain,
 		setGain,
@@ -38,7 +36,7 @@ const DelayCard = () => {
 		isInitialized: isGainInitialized,
 	} = useGain({ gain: 0.25 });
 
-	// Custom debug function to include effect-specific state
+	// debug function to include effect-specific state
 	const debugState = useCallback(() => {
 		console.log('Additional Debug Info:', {
 			delayTime,
