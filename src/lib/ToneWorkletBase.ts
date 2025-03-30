@@ -1,54 +1,36 @@
-// minorly refactored wrapper around Tone's ToneAudioWorkletNode
 import * as Tone from 'tone'
 
 import { getWorkletGlobalScope } from './WorkletGlobalScope'
 
 /**
- * Default no-operation error handler for processor errors
+ * error handler for worklet processor errors
  */
 const noOp: (e: ErrorEvent) => void = () => {
-	// No operation by default - errors are handled by subclasses if needed
+	// errors are handled by subclasses if needed
 };
 
 /**
- * Base options for ToneWorklet classes
+ * base options for the class
  */
 export type ToneWorkletBaseOptions = Tone.ToneAudioNodeOptions & {
 	/**
-	 * Additional AudioWorklet options for configuring the underlying AudioWorkletNode
+	 * additional options for the AudioWorkletNode
 	 */
 	workletOptions?: Partial<AudioWorkletNodeOptions>;
 
 	/**
-	 * Debug mode enables additional console logging
+	 * enables additional debug logging
 	 * @default false
 	 */
 	debug?: boolean;
 };
 
 /**
- * Base class for creating Tone.js compatible AudioWorklet nodes
  *
- * This abstract class provides the core functionality for integrating
- * custom AudioWorklet processors with the Tone.js API. It handles the
- * lifecycle of AudioWorklet initialization, parameter management, and
- * proper cleanup.
- *
- * @template Options - Configuration options type for the node
+ * @template Options - config options type for the node
  * @example
  * ```typescript
- * // Implementation example
- * export class CustomNode extends ToneWorkletBase<CustomOptions> {
- *   readonly name = 'CustomNode';
- *
- *   protected _audioWorkletName(): string {
- *     return 'custom-processor';
- *   }
- *
- *   onReady(node: AudioWorkletNode): void {
- *     // Connect parameters and set up routing
- *   }
- * }
+TODO
  * ```
  */
 export abstract class ToneWorkletBase<
@@ -62,47 +44,47 @@ export abstract class ToneWorkletBase<
 	// protected debug: boolean = false;
 
 	/**
-	 * Must be implemented to return the registered name of the AudioWorklet processor
+	 * needed to create the worklet
 	 */
 	protected abstract _audioWorkletName(): string;
 
 	/**
-	 * Called when the AudioWorkletNode is successfully created
-	 * Use this to connect parameters and set up routing
+	 * called when the AudioWorkletNode is successfully created
+	 * use this to connect parameters and set up routing
 	 * @param node - The newly created AudioWorkletNode
 	 */
 	protected abstract onReady(node: AudioWorkletNode): void;
 
 	/**
-	 * Handler for AudioWorklet processor errors
+	 * handler for AudioWorklet processor errors
 	 */
 	onprocessorerror: (e: ErrorEvent) => void = noOp;
 
 	/**
-	 * Status of worklet initialization
+	 * status of worklet initialization
 	 */
 	private _workletReady: boolean = false;
 
 	/**
-	 * Promise that resolves when worklet is ready
+	 * promise that resolves when worklet is ready
 	 */
 	private _workletReadyPromise: Promise<void>;
 	private _workletReadyResolve!: () => void;
 	private _workletReadyReject!: (err: Error) => void;
 
 	/**
-	 * Create a new ToneWorkletBase instance
+	 * create a new ToneWorkletBase instance
 	 * @param options - Configuration options
 	 */
 	constructor(options: Options) {
 		super(options);
 
-		// Set up worklet options if provided
+		// set up worklet options if provided
 		if (options.workletOptions) {
 			this.workletOptions = options.workletOptions;
 		}
 
-		// Enable debug mode if specified
+		// enable debug mode if specified
 		if (options.debug) {
 			this.debug = true;
 		}
@@ -116,12 +98,12 @@ export abstract class ToneWorkletBase<
 			this._workletReadyReject = reject;
 		});
 
-		// Initialize the worklet module
+		// init the worklet module
 		this._initWorklet();
 	}
 
 	/**
-	 * Initialize the AudioWorklet module and create the node
+	 * init the AudioWorklet module and create the node
 	 */
 	private _initWorklet(): void {
 		const blobUrl = URL.createObjectURL(
@@ -133,11 +115,11 @@ export abstract class ToneWorkletBase<
 			console.log(`🔍 Initializing AudioWorklet: ${name}`);
 		}
 
-		// Register the processor
+		// register the processor
 		this.context
 			.addAudioWorkletModule(blobUrl)
 			.then(() => {
-				// Create the worklet when it's ready
+				// create the worklet when it's ready
 				if (!this.disposed) {
 					try {
 						this._worklet = this.context.createAudioWorkletNode(
@@ -179,23 +161,23 @@ export abstract class ToneWorkletBase<
 	}
 
 	/**
-	 * Returns a promise that resolves when the worklet is ready
-	 * @returns Promise that resolves when the worklet is initialized and ready
+	 * get the worklet node
+	 * @returns promise that resolves when the worklet is initialized and ready
 	 */
 	get ready(): Promise<void> {
 		return this._workletReadyPromise;
 	}
 
 	/**
-	 * Checks if the worklet is ready
-	 * @returns True if the worklet is initialized and ready
+	 * is the worklet ready
+	 * @returns true if the worklet is initialized and ready
 	 */
 	get isReady(): boolean {
 		return this._workletReady;
 	}
 
 	/**
-	 * Clean up and release resources
+	 * cleanup
 	 */
 	dispose(): this {
 		if (this.debug) {
@@ -214,8 +196,8 @@ export abstract class ToneWorkletBase<
 	}
 
 	/**
-	 * Static factory to get default options
-	 * @returns Default base options
+	 * static factory to get default options
+	 * @returns default class base options
 	 */
 	static getDefaults(): ToneWorkletBaseOptions {
 		return Object.assign(Tone.ToneAudioNode.getDefaults(), {

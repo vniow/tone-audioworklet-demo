@@ -1,13 +1,13 @@
 /**
- * WorkletGlobalScope - Utility for managing AudioWorklet shared code
+ * WorkletGlobalScope - refactored Tone.js utility for managing AudioWorklet shared code
  *
- * This module provides utilities for aggregating JavaScript code that will run
- * in the AudioWorklet global scope. It handles registration of processors and
- * their dependencies.
+ * AudioWorklets must be written in JavaScript and be registered within the AudioWorkletNode global scope.
+ * this module provides utilities for aggregating JavaScript code.
+ *
  */
 
 /**
- * Registry of worklet components by type
+ * registry of worklet components by type
  */
 interface WorkletRegistry {
 	baseClasses: Set<string>;
@@ -16,7 +16,7 @@ interface WorkletRegistry {
 	registrations: Map<string, string>;
 }
 
-// Registry to track different types of worklet code
+// registry to track different types of worklet code
 const workletRegistry: WorkletRegistry = {
 	baseClasses: new Set<string>(),
 	processors: new Set<string>(),
@@ -25,7 +25,7 @@ const workletRegistry: WorkletRegistry = {
 };
 
 /**
- * Add base class code to the worklet global scope
+ * add base class code to the worklet global scope
  *
  * @param classCode - The class code to add (should be a class definition)
  * @returns void
@@ -35,9 +35,9 @@ export function addBaseClass(classCode: string): void {
 }
 
 /**
- * Add utility code to the worklet global scope
+ * add utility code to the worklet global scope
  *
- * @param utilityCode - The utility code to add (functions, constants, etc.)
+ * @param utilityCode - the utility code to add (functions, constants, etc.)
  * @returns void
  */
 export function addUtility(utilityCode: string): void {
@@ -45,28 +45,15 @@ export function addUtility(utilityCode: string): void {
 }
 
 /**
- * Add worklet processor code to the global scope
+ * audio worklets need to be registered with the AudioWorkletNode global scope
  *
- * This is kept for backward compatibility with existing code.
- * For new code, prefer using more specific functions like addBaseClass.
- *
- * @param classOrFunction - The code to add to the worklet
- * @returns void
- */
-export function addToWorklet(classOrFunction: string): void {
-	workletRegistry.processors.add(classOrFunction);
-}
-
-/**
- * Register a processor with the AudioWorklet
- *
- * This creates the registerProcessor call to register the processor
+ * this creates the registerProcessor call to register the processor
  * with the AudioWorklet processing context.
  *
- * @param name - Name to register the processor with
+ * @param name - the name to register the processor with
  * @param classDesc - JavaScript class as a string
  * @returns void
- * @throws Error if a processor with the given name is already registered
+ * @throws error if a processor with the given name is already registered
  */
 export function registerProcessor(name: string, classDesc: string): void {
 	if (workletRegistry.registrations.has(name)) {
@@ -78,15 +65,15 @@ export function registerProcessor(name: string, classDesc: string): void {
 }
 
 /**
- * Get the complete code for the worklet global scope in the correct load order
+ * get the complete JavaScript code for the worklet global scope in the correct load order
  *
- * @param debug - If true, includes debug statements in the generated code
- * @returns The complete worklet code as a string
+ * @param debug - includes debug statements in the generated code
+ * @returns the complete worklet code as a string
  */
 export function getWorkletGlobalScope(debug: boolean = false): string {
 	const parts: string[] = [];
 
-	// Add debug header if requested
+	// add debug header if requested
 	if (debug) {
 		parts.push(
 			`/* AudioWorklet Global Scope - Generated ${new Date().toISOString()} */`
@@ -96,16 +83,16 @@ export function getWorkletGlobalScope(debug: boolean = false): string {
 		);
 	}
 
-	// Add base classes first
+	// add base classes first
 	workletRegistry.baseClasses.forEach((baseClass) => parts.push(baseClass));
 
-	// Add utility functions
+	// add utility functions
 	workletRegistry.utilities.forEach((utility) => parts.push(utility));
 
-	// Add processor implementations
+	// add processor implementations
 	workletRegistry.processors.forEach((processor) => parts.push(processor));
 
-	// Add processor registrations last
+	// ...and finally add processor registrations
 	workletRegistry.registrations.forEach((registration) =>
 		parts.push(registration)
 	);
@@ -114,26 +101,26 @@ export function getWorkletGlobalScope(debug: boolean = false): string {
 }
 
 /**
- * Check if a processor is registered
+ * check if a processor is registered
  *
- * @param name - Name of the processor to check
- * @returns True if the processor is registered
+ * @param name - name of the processor to check
+ * @returns true if the processor is registered
  */
 export function isProcessorRegistered(name: string): boolean {
 	return workletRegistry.registrations.has(name);
 }
 
 /**
- * Get a list of all registered processor names
+ * get a list of all registered processor names
  *
- * @returns Array of registered processor names
+ * @returns array of registered processor names
  */
 export function getRegisteredProcessors(): string[] {
 	return Array.from(workletRegistry.registrations.keys());
 }
 
 /**
- * Reset the worklet registry - primarily for testing purposes
+ * reset the worklet registry - primarily for testing purposes
  */
 export function resetWorkletRegistry(): void {
 	workletRegistry.baseClasses.clear();

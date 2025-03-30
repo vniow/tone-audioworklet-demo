@@ -1,6 +1,6 @@
 import './SingleIOProcessor.worklet'
 
-import { addToWorklet, registerProcessor } from '../lib/WorkletGlobalScope'
+import { registerProcessor } from '../lib/WorkletGlobalScope'
 
 /**
  * Name to register the noise processor with
@@ -80,5 +80,4 @@ export const noiseProcessorWorklet = /* javascript */ `
 `;
 
 // Register the processor class
-addToWorklet(noiseProcessorWorklet);
-registerProcessor(workletName, 'NoiseProcessor');
+registerProcessor(workletName, noiseProcessorWorklet);
