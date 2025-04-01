@@ -1,24 +1,24 @@
-import './ToneAudioWorkletProcessor.worklet'
+import "./ToneAudioWorkletProcessor.worklet";
 
-import { addBaseClass } from '../lib/WorkletGlobalScope'
+import { addBaseClass } from "../lib/WorkletGlobalScope";
 
 /**
- * Single Input/Output processor base class for implementing sample-by-sample audio processors.
- * This provides a simplified interface where implementations only need to implement a generate() method.
+ * single input/output processor for AudioWorklet for worklets
+ * that process audio one sample at a time
  */
 export const singleIOProcess = /* javascript */ `
 	/**
-	 * Abstract class for a single input/output processor.
-	 * Provides a simplified interface for processing audio one sample at a time.
+	 * abstract class for a single input/output processor
+	 * provides a simplified interface for processing audio one sample at a time
 	 * 
 	 * @extends ToneAudioWorkletProcessor
 	 * 
-	 * @typedef {Object} ProcessorParams - All parameters accessible in the generate method
-	 * @property {Object.<string, number>} params - Runtime parameter values
+	 * @typedef {Object} ProcessorParams - all parameters accessible in the generate method
+	 * @property {Object.<string, number>} params - runtime parameter values
 	 */
 	class SingleIOProcessor extends ToneAudioWorkletProcessor {
 		/**
-		 * @param {Object} options - AudioWorkletProcessor initialization options
+		 * @param {Object} options - AudioWorkletProcessor init options
 		 */
 		constructor(options) {
 			super(Object.assign({}, options, {
@@ -27,14 +27,14 @@ export const singleIOProcess = /* javascript */ `
 			}));
 			
 			/**
-			 * Parameters are updated on each sample
+			 * parameters are updated on each sample
 			 * @type {Object.<string, number>}
 			 * @protected
 			 */
 			this.params = {};
 			
 			/**
-			 * Cache for audio processing optimization
+			 * cache for audio processing optimization
 			 * @type {Float32Array[]}
 			 * @protected
 			 */
@@ -42,24 +42,24 @@ export const singleIOProcess = /* javascript */ `
 		}
 		
 		/**
-		 * Generate a single sample of audio output
-		 * Override this method in subclasses to implement audio processing.
+		 * generate a single sample of audio output
+		 * override this method in subclasses to implement audio processing.
 		 * 
-		 * @param {number} input - Input sample value
-		 * @param {number} channel - Channel index
-		 * @param {Object.<string, number>} params - Parameter values
-		 * @returns {number} Output sample
+		 * @param {number} input - input sample value
+		 * @param {number} channel - channel index
+		 * @param {Object.<string, number>} params - parameter values
+		 * @returns {number} output sample
 		 */
 		generate(input, channel, params) {
-			// Override in subclass - default is pass-through
+			// override in subclass - default is pass-through
 			return input;
 		}
 
 		/**
-		 * Update parameter values for the current sample
+		 * update parameter values for the current sample
 		 * 
-		 * @param {Object.<string, Float32Array>} parameters - Raw parameter arrays
-		 * @param {number} index - Current sample index
+		 * @param {Object.<string, Float32Array>} parameters - raw parameter arrays
+		 * @param {number} index - current sample index
 		 */
 		updateParams(parameters, index) {
 			for (const paramName in parameters) {
@@ -73,37 +73,36 @@ export const singleIOProcess = /* javascript */ `
 		}
 
 		/**
-		 * Process audio data
-		 * This method handles copying input to output with the generate function.
+		 * process audio data
+		 * handles copying input to output with the generate function
 		 * 
-		 * @param {Float32Array[][]} inputs - Input audio data
-		 * @param {Float32Array[][]} outputs - Output audio buffers to fill
+		 * @param {Float32Array[][]} inputs - input audio data
+		 * @param {Float32Array[][]} outputs - output audio buffers to fill
 		 * @param {Object.<string, Float32Array>} parameters - AudioWorklet parameters
-		 * @returns {boolean} Keep alive flag
-		 */
+		*/
 		process(inputs, outputs, parameters) {
 			const input = inputs[0];
 			const output = outputs[0];
 			
-			// Determine channel count from available inputs/outputs
+			// determine channel count from available inputs/outputs
 			const channelCount = Math.max(input && input.length || 0, output.length);
 			
-			// Process each sample
+			// process each sample
 			for (let sample = 0; sample < this.blockSize; sample++) {
 				// Update parameter values for this sample
 				this.updateParams(parameters, sample);
 				
-				// Process each channel
+				// then process each channel
 				for (let channel = 0; channel < channelCount; channel++) {
 					// Get input sample (or 0 if no input)
 					const inputSample = input && input.length ? input[channel][sample] : 0;
 					
-					// Generate output sample
+					// finally, generate output sample
 					output[channel][sample] = this.generate(inputSample, channel, this.params);
 				}
 			}
 			
-			// Keep processor alive unless disposed
+			// keep processor alive unless disposed
 			return !this.disposed;
 		}
 	};

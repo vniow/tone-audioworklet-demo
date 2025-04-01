@@ -1,13 +1,11 @@
 import { addBaseClass } from '../lib/WorkletGlobalScope'
 
 /**
- * Base processor class for Tone.js audio worklets.
- * This implements the basic functionality needed for all Tone.js audio processors.
+ * this provides the base class for all Tone.js compatible audioworklets
  */
 const toneAudioWorkletProcessor = /* javascript */ `
 	/**
-	 * Base class for all Tone.js audio worklet processors.
-	 * Provides common lifecycle management and access to audio context properties.
+	 * provides common lifecycle management and access to audio context properties
 	 * 
 	 * @extends AudioWorkletProcessor
 	 */
@@ -19,48 +17,50 @@ const toneAudioWorkletProcessor = /* javascript */ `
 			super(options);
 			
 			/**
-			 * Flag to track if processor has been disposed
+			 * flag to track if processor has been disposed
 			 * @type {boolean}
 			 */
 			this.disposed = false;
 			
 			/**
-			 * Size of processing blocks from the audio context
+			 * size of processing blocks from the audio context
+			 * TODO: the size is set at 128 samples for now but it may vary
+			 * in the future
 			 * @type {number}
 			 * @readonly
 			 */
 			this.blockSize = 128;
 			
 			/**
-			 * Sample rate from the audio context
+			 * sample rate from the audio context
 			 * @type {number}
 			 * @readonly
 			 */
 			this.sampleRate = sampleRate;
 			
-			// Set up message handling from main thread
+			// set up message handling from main thread
 			this.port.onmessage = (event) => {
 				if (event.data === "dispose") {
 					this.disposed = true;
 				} else {
-					// Handle other message types in subclasses
+					// handle other message types in subclasses
 					this._onMessage(event);
 				}
 			};
 		}
 		
 		/**
-		 * Handle messages from the main thread
-		 * Override in subclasses to handle custom messages
+		 * handle messages from the main thread
+		 * override in subclasses to handle custom messages
 		 * 
 		 * @protected
-		 * @param {MessageEvent} event - The message event from the main thread
+		 * @param {MessageEvent} event - the message event from the main thread
 		 */
 		_onMessage(event) {
-			// Default implementation does nothing
+			// default implementation does nada
 		}
 	}
 `;
 
-// Add the processor base class to the worklet global scope
+// add the processor base class to the worklet global scope
 addBaseClass(toneAudioWorkletProcessor);
