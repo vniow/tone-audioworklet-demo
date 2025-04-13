@@ -8,9 +8,7 @@ Because Tone.js is built on top of the Web Audio API, it has full access to the 
 
 ## how does it work
 
-Tone.js has existing nodes that are built with custom AudioWorklets that live under a `ToneAudioWorkletClass`. Unfortunately this class is not exposed via the API, so I receated it.
-
-The base worklet
+Tone.js has existing nodes that are built with custom AudioWorklets that live under a `ToneAudioWorkletClass`. Unfortunately this class is not exposed via the API, so I more or less receated it.
 
 [ToneWorkletBase](/src/lib/ToneWorkletBase.ts) is a class which extends `Tone.ToneAudioNode` and enables an AudioWorklet object to exist within the Tone.js ecosystem. This means it has access to any other method or parameter that any other [ToneAudioNode] object has access to.
 
