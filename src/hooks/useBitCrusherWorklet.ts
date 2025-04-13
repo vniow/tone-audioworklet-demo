@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
-import * as Tone from 'tone'
+import { useEffect, useRef, useState } from 'react';
+import * as Tone from 'tone';
 
-import { BitCrusherNode } from '../lib/BitCrusherNode'
-import { getWorkletGlobalScope } from '../lib/WorkletGlobalScope'
-import { workletName } from '../worklets/BitCrusher.worklet'
+import { BitCrusherNode } from '../lib/BitCrusherNode';
+import { getWorkletGlobalScope } from '../lib/WorkletGlobalScope';
+import { workletName } from '../worklets/BitCrusher.worklet';
 
 // options interface for the bit crusher hook
 export interface BitCrusherOptions {
@@ -59,9 +59,6 @@ export const useBitCrusherWorklet = (
 
 		const setupBitCrusher = async () => {
 			try {
-				// initialize audio worklets
-				await Tone.start();
-
 				// register worklets
 				const audioWorkletBlob = new Blob([getWorkletGlobalScope()], {
 					type: 'text/javascript',
