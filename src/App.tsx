@@ -1,8 +1,8 @@
-import DelayCard from './components/DelayCard'
-import NoiseBitCrusherCard from './components/NoiseBitCrusherCard'
-import NoiseCard from './components/NoiseCard'
-import OscBitCrusherCard from './components/OscBitCrusherCard'
-import { ThemeToggle } from './components/ThemeToggle'
+import DelayCard from './components/DelayCard';
+import NoiseBitCrusherCard from './components/NoiseBitCrusherCard';
+import NoiseCard from './components/NoiseCard';
+import OscBitCrusherCard from './components/OscBitCrusherCard';
+import { ThemeToggle } from './components/ThemeToggle';
 
 function App() {
 	return (
