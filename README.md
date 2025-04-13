@@ -1,6 +1,6 @@
 # Tone.js AudioWorklet Demo
 
-[https://tone-audioworklet-demo.vercel.app/](live demo)
+[live demo](https://tone-audioworklet-demo.vercel.app/)
 
 ## what is it
 
