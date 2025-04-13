@@ -1,8 +1,7 @@
 /**
  * WorkletGlobalScope - refactored Tone.js utility for managing AudioWorklet shared code
  *
- * AudioWorklets must be written in JavaScript and be registered within the AudioWorkletNode global scope.
- * this module provides utilities for aggregating JavaScript code.
+ * AudioWorklets must be written in JavaScript and be registered within the AudioWorkletNode global scope
  *
  */
 
@@ -27,7 +26,7 @@ const workletRegistry: WorkletRegistry = {
 /**
  * add base class code to the worklet global scope
  *
- * @param classCode - The class code to add (should be a class definition)
+ * @param classCode - the class code to add (should be a class definition)
  * @returns void
  */
 export function addBaseClass(classCode: string): void {
@@ -48,7 +47,7 @@ export function addUtility(utilityCode: string): void {
  * audio worklets need to be registered with the AudioWorkletNode global scope
  *
  * this creates the registerProcessor call to register the processor
- * with the AudioWorklet processing context.
+ * with the AudioWorklet processing context
  *
  * @param name - the name to register the processor with
  * @param classDesc - JavaScript class as a string

@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
-import * as Tone from 'tone'
+import { useEffect, useRef, useState } from 'react';
+import * as Tone from 'tone';
 
-import { DelayNode } from '../lib/DelayNode'
-import { getWorkletGlobalScope } from '../lib/WorkletGlobalScope'
-import { workletName as delayWorklet } from '../worklets/DelayProcessor.worklet'
+import { DelayNode } from '../lib/DelayNode';
+import { getWorkletGlobalScope } from '../lib/WorkletGlobalScope';
+import { workletName as delayWorklet } from '../worklets/DelayProcessor.worklet';
 
 export interface DelayOptions {
 	delayTime?: number; // in seconds
@@ -62,9 +62,6 @@ export const useDelayWorklet = (
 
 		const setupDelayWorklet = async () => {
 			try {
-				// initialize audio worklets
-				await Tone.start();
-
 				// register worklets
 				const audioWorkletBlob = new Blob([getWorkletGlobalScope()], {
 					type: 'text/javascript',
@@ -164,11 +161,9 @@ export const useDelayWorklet = (
 		wetRef.current = newWet;
 
 		if (delayNodeRef.current) {
-			
 			delayNodeRef.current.wet = newWet;
 			console.log(`🔊 updated wet mix: ${newWet}`);
 		}
-		
 	};
 
 	return {

@@ -8,43 +8,43 @@ import { addUtility } from '../lib/WorkletGlobalScope.js'
  */
 const delayLine = /* javascript */ `
 	/**
-	 * A multichannel circular buffer for use within an AudioWorkletProcessor as a delay line
+	 * multichannel circular buffer for use within an AudioWorkletProcessor as a delay line
 	 * 
-	 * This class implements an efficient circular buffer that can be used to create
-	 * delay-based audio effects like echo, reverb, chorus, and more.
+	 * implements an efficient circular buffer that can be used to create
+	 * delay-based audio effects like echo, reverb, chorus, and more
 	 */
 	class DelayLine {
 		/**
-		 * Create a new delay line
+		 * create a new delay line
 		 * 
-		 * @param {number} size - Maximum delay length in samples
-		 * @param {number} channels - Number of audio channels to support
+		 * @param {number} size - maximum delay length in samples
+		 * @param {number} channels - number of audio channels to support
 		 */
 		constructor(size, channels) {
 			/**
-			 * Audio buffer for each channel
+			 * audio buffer for each channel
 			 * @type {Float32Array[]}
 			 * @private
 			 */
 			this.buffer = [];
 			
 			/**
-			 * Write position for each channel
+			 * write position for each channel
 			 * @type {number[]}
 			 * @private
 			 */
 			this.writeHead = [];
 			
 			/**
-			 * Maximum size of the delay buffer in samples
+			 * maximum size of the delay buffer in samples
 			 * @type {number}
 			 * @readonly
 			 */
 			this.size = size;
 
-			// Initialize channel buffers
+			// init channel buffers
 			for (let i = 0; i < channels; i++) {
-				// Pre-allocate buffers and initialize with silence
+				// pre-allocate buffers and initialize with silence
 				this.buffer[i] = new Float32Array(this.size);
 				this.buffer[i].fill(0);
 				this.writeHead[i] = 0;
@@ -52,34 +52,34 @@ const delayLine = /* javascript */ `
 		}
 
 		/**
-		 * Push a sample into the delay line
+		 * push a sample into the delay line
 		 * 
-		 * @param {number} channel - Channel index
-		 * @param {number} value - Sample value to write
+		 * @param {number} channel - channel index
+		 * @param {number} value - sample value to write
 		 */
 		push(channel, value) {
-			// Increment write head position
+			// increment write head position
 			this.writeHead[channel] = (this.writeHead[channel] + 1) % this.size;
 			
-			// Write the sample
+			// write the sample
 			this.buffer[channel][this.writeHead[channel]] = value;
 		}
 
 		/**
-		 * Get a sample from the delay line at the specified delay
+		 * get a sample from the delay line at the specified delay
 		 * 
-		 * @param {number} channel - Channel index
-		 * @param {number} delay - Delay in samples (must be less than buffer size)
-		 * @returns {number} The delayed sample value
+		 * @param {number} channel - channel index
+		 * @param {number} delay - delay in samples (must be less than buffer size)
+		 * @returns {number} the delayed sample value
 		 */
 		get(channel, delay) {
-			// Limit delay to buffer size
+			// limit delay to buffer size
 			const actualDelay = Math.min(delay, this.size - 1);
 			
-			// Calculate read position
+			// calculate read position
 			let readHead = this.writeHead[channel] - Math.floor(actualDelay);
 			
-			// Wrap around if needed
+			// wrap around if needed
 			if (readHead < 0) {
 				readHead += this.size;
 			}
@@ -88,28 +88,28 @@ const delayLine = /* javascript */ `
 		}
 		
 		/**
-		 * Get a sample with fractional delay using linear interpolation
+		 * get a sample with fractional delay using linear interpolation
 		 * 
-		 * @param {number} channel - Channel index
-		 * @param {number} delay - Delay in samples, can be fractional
-		 * @returns {number} Interpolated sample value
+		 * @param {number} channel - channel index
+		 * @param {number} delay - delay in samples, can be fractional
+		 * @returns {number} interpolated sample value
 		 */
 		getInterpolated(channel, delay) {
-			// Integer part of delay
+			// integer part of delay
 			const floorDelay = Math.floor(delay);
-			// Fractional part for interpolation
+			// fractional part for interpolation
 			const fraction = delay - floorDelay;
 			
-			// Get the two samples we'll interpolate between
+			// get the two samples we'll interpolate between
 			const sample1 = this.get(channel, floorDelay);
 			const sample2 = this.get(channel, floorDelay + 1);
 			
-			// Linear interpolation between samples
+			// linear interpolation between samples
 			return sample1 + fraction * (sample2 - sample1);
 		}
 		
 		/**
-		 * Clear the delay buffer for all channels
+		 * clear the delay buffer for all channels
 		 */
 		clear() {
 			for (let i = 0; i < this.buffer.length; i++) {
@@ -119,5 +119,5 @@ const delayLine = /* javascript */ `
 	}
 `;
 
-// Add the DelayLine utility to the worklet global scope
+// add the DelayLine class to the global worklet scope
 addUtility(delayLine);

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import * as Tone from 'tone'
+import { useEffect, useRef, useState } from 'react';
+import * as Tone from 'tone';
 
 // options interface
 export interface OscillatorOptions {
@@ -48,7 +48,6 @@ export const useOscillator = (
 	// create oscillator on mount
 	useEffect(() => {
 		console.log('🎛️ initializing oscillator...');
-
 		const osc = new Tone.Oscillator(frequency, type);
 		oscillatorRef.current = osc;
 		setIsInitialized(true);
