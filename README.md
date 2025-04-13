@@ -1,5 +1,7 @@
 # Tone.js AudioWorklet Demo
 
+[https://tone-audioworklet-demo.vercel.app/](live demo)
+
 ## what is it
 
 Tone.js, while a wonderful audio library for web audio, does not by default offer a way to create a node using a custom AudioWorklet and keep it within the Tone.js ecosystem.
